@@ -1,0 +1,212 @@
+/* ============================= */
+/* Todo Container Wrapper */
+/* ============================= */
+.todo-container {
+  max-width: 600px;
+  margin: 20px auto;
+  padding: 24px;
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+  font-family: 'Segoe UI', Arial, sans-serif;
+  border: 1px solid #edf2f7;
+}
+
+/* ============================= */
+/* Heading */
+/* ============================= */
+.todo-container h2 {
+  text-align: center;
+  margin-bottom: 24px;
+  color: #2d3748;
+  font-size: 1.8rem;
+  font-weight: 600;
+  padding-bottom: 12px;
+  border-bottom: 2px solid #edf2f7;
+}
+
+/* ============================= */
+/* Input Field and Add Button Wrapper */
+/* ============================= */
+.todo-container .input-group {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+/* ============================= */
+/* Input Field */
+/* ============================= */
+.todo-container input[type="text"] {
+  flex: 1;
+  padding: 12px 16px;
+  border: 2px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 16px;
+  transition: all 0.2s ease;
+  background-color: #f8fafc;
+}
+
+.todo-container input[type="text"]:focus {
+  outline: none;
+  border-color: #4299e1;
+  background-color: white;
+  box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.15);
+}
+
+/* ============================= */
+/* Add Button */
+/* ============================= */
+.todo-container button.add-button {
+  padding: 12px 24px;
+  border: none;
+  border-radius: 8px;
+  background-color: #3b82f6;
+  color: #fff;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 4px rgba(59, 130, 246, 0.2);
+}
+
+.todo-container button.add-button:hover {
+  background-color: #2563eb;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 6px rgba(59, 130, 246, 0.25);
+}
+
+.todo-container button.add-button:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(59, 130, 246, 0.2);
+}
+
+/* ============================= */
+/* Todo List */
+/* ============================= */
+.todo-container ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+/* ============================= */
+/* Todo Item */
+/* ============================= */
+.todo-container li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #fff;
+  margin-bottom: 12px;
+  padding: 16px;
+  border-radius: 10px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  transition: all 0.2s ease;
+}
+
+.todo-container li:hover {
+  background-color: #f8fafc;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 6px rgba(0,0,0,0.07);
+  border-color: #cbd5e1;
+}
+
+/* ============================= */
+/* Todo Text */
+/* ============================= */
+.todo-container li span {
+  flex: 1;
+  word-break: break-word;
+}
+
+/* ============================= */
+/* Complete and Delete Buttons */
+/* ============================= */
+.todo-container li button {
+  margin-left: 12px;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+}
+
+.todo-container li button.complete-btn {
+  background-color: #10b981;
+  color: #fff;
+  box-shadow: 0 2px 4px rgba(16, 185, 129, 0.2);
+}
+
+.todo-container li button.complete-btn:hover {
+  background-color: #059669;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 6px rgba(16, 185, 129, 0.25);
+}
+
+.todo-container li button.complete-btn:active {
+  transform: translateY(0);
+}
+
+.todo-container li button.delete-btn {
+  background-color: #ef4444;
+  color: #fff;
+  box-shadow: 0 2px 4px rgba(239, 68, 68, 0.2);
+}
+
+.todo-container li button.delete-btn:hover {
+  background-color: #dc2626;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 6px rgba(239, 68, 68, 0.25);
+}
+
+.todo-container li button.delete-btn:active {
+  transform: translateY(0);
+}
+
+/* ============================= */
+/* Completed Todo */
+/* ============================= */
+.todo-container li.completed {
+  background-color: #f8fafc;
+  border-color: #e2e8f0;
+}
+
+.todo-container li.completed span {
+  text-decoration: line-through;
+  color: #94a3b8;
+}
+
+/* ============================= */
+/* Responsive Design */
+/* ============================= */
+@media (max-width: 640px) {
+  .todo-container {
+    margin: 10px;
+    padding: 16px;
+  }
+
+  .todo-container .input-group {
+    flex-direction: column;
+  }
+
+  .todo-container input[type="text"] {
+    margin-bottom: 10px;
+  }
+
+  .todo-container li {
+    flex-direction: column;
+    gap: 10px;
+    align-items: stretch;
+  }
+
+  .todo-container li button {
+    margin: 4px 0;
+    padding: 10px;
+  }
+}
