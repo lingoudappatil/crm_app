@@ -1,9 +1,13 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 
-export default function connectDB() {
-  const uri = process.env.MONGO_URI || 'mongodb://localhost:27017/login';
-  return mongoose.connect(uri, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  });
+export default async function connectDB() {
+  const uri = process.env.MONGO_URI || "mongodb://localhost:27017/login";
+
+  try {
+    await mongoose.connect(uri);
+    console.log("✅ MongoDB connected successfully!");
+  } catch (error) {
+    console.error("❌ MongoDB connection failed:", error.message);
+    process.exit(1);
+  }
 }
