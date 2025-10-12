@@ -37,25 +37,25 @@ const HomePage = ({ setCurrentPage, loggedInUser }) => {
 
   const fetchCustomerCount = async () => {
     try {
-      const res = await fetch("http://localhost:5000/api/customers");
+      const res = await fetch("https://crm-app-onij.onrender.com/");
       if (res.ok) setCustomerCount((await res.json()).length);
     } catch (err) { console.error(err); }
   };
   const fetchLeadsCount = async () => {
     try {
-      const res = await fetch("http://localhost:5000/api/leads");
+      const res = await fetch("https://crm-app-onij.onrender.com/");
       if (res.ok) setLeadsCount((await res.json()).length);
     } catch (err) { console.error(err); }
   };
   const fetchQuotationsCount = async () => {
     try {
-      const res = await fetch("http://localhost:5000/api/quotations");
+      const res = await fetch("https://crm-app-onij.onrender.com/");
       if (res.ok) setQuotationsCount((await res.json()).length);
     } catch (err) { console.error(err); }
   };
   const fetchOrdersCount = async () => {
     try {
-      const res = await fetch("http://localhost:5000/api/orders");
+      const res = await fetch("https://crm-app-onij.onrender.com/");
       if (res.ok) setOrdersCount((await res.json()).length);
     } catch (err) { console.error(err); }
   };
