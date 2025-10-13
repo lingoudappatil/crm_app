@@ -19,7 +19,8 @@ export default function FollowUpPage({ onCustomerAdded }) {
 
   const fetchEntries = async (module) => {
     try {
-      const res = await fetch(`http://localhost:5000/api/${module.toLowerCase()}`);
+  const base = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+  const res = await fetch(`${base.replace(/\/$/, '')}/api/${module.toLowerCase()}`);
       const data = await res.json();
       setEntries(data);
     } catch (err) {
@@ -40,7 +41,8 @@ export default function FollowUpPage({ onCustomerAdded }) {
     const followUpDateTime = new Date(`${followUpDate}T${followUpTime}`);
 
     try {
-      await fetch("http://localhost:5000/api/followups", {
+  const base2 = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+  await fetch(`${base2.replace(/\/$/, '')}/api/followups`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
