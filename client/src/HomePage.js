@@ -30,6 +30,11 @@ const HomePage = ({ setCurrentPage, loggedInUser }) => {
   const [activeModule, setActiveModule] = useState("Dashboard");
   const [activeSub, setActiveSub] = useState(null);
 
+  // base URL for API calls: prefer explicit REACT_APP_API_URL, otherwise
+  // use localhost in development, or relative paths in production
+  const defaultBase = process.env.NODE_ENV === 'development' ? 'http://localhost:5000' : '';
+  const baseUrl = process.env.REACT_APP_API_URL || defaultBase;
+
   useEffect(() => {
     const timer = setInterval(() => setCurrentTime(new Date()), 1000);
     return () => clearInterval(timer);
@@ -37,26 +42,50 @@ const HomePage = ({ setCurrentPage, loggedInUser }) => {
 
   const fetchCustomerCount = async () => {
     try {
-      const res = await fetch("https://crm-app-onij.onrender.com/");
-      if (res.ok) setCustomerCount((await res.json()).length);
+      const url = baseUrl ? `${baseUrl.replace(/\/$/, '')}/api/customers` : '/api/customers';
+      const res = await fetch(url);
+      if (res.ok) {
+        const data = await res.json();
+        setCustomerCount(Array.isArray(data) ? data.length : (data.count || 0));
+      } else {
+        console.error('Failed to fetch customers', res.status, res.statusText);
+      }
     } catch (err) { console.error(err); }
   };
   const fetchLeadsCount = async () => {
     try {
-      const res = await fetch("https://crm-app-onij.onrender.com/");
-      if (res.ok) setLeadsCount((await res.json()).length);
+      const url = baseUrl ? `${baseUrl.replace(/\/$/, '')}/api/leads` : '/api/leads';
+      const res = await fetch(url);
+      if (res.ok) {
+        const data = await res.json();
+        setLeadsCount(Array.isArray(data) ? data.length : (data.count || 0));
+      } else {
+        console.error('Failed to fetch leads', res.status, res.statusText);
+      }
     } catch (err) { console.error(err); }
   };
   const fetchQuotationsCount = async () => {
     try {
-      const res = await fetch("https://crm-app-onij.onrender.com/");
-      if (res.ok) setQuotationsCount((await res.json()).length);
+      const url = baseUrl ? `${baseUrl.replace(/\/$/, '')}/api/quotations` : '/api/quotations';
+      const res = await fetch(url);
+      if (res.ok) {
+        const data = await res.json();
+        setQuotationsCount(Array.isArray(data) ? data.length : (data.count || 0));
+      } else {
+        console.error('Failed to fetch quotations', res.status, res.statusText);
+      }
     } catch (err) { console.error(err); }
   };
   const fetchOrdersCount = async () => {
     try {
-      const res = await fetch("https://crm-app-onij.onrender.com/");
-      if (res.ok) setOrdersCount((await res.json()).length);
+      const url = baseUrl ? `${baseUrl.replace(/\/$/, '')}/api/orders` : '/api/orders';
+      const res = await fetch(url);
+      if (res.ok) {
+        const data = await res.json();
+        setOrdersCount(Array.isArray(data) ? data.length : (data.count || 0));
+      } else {
+        console.error('Failed to fetch orders', res.status, res.statusText);
+      }
     } catch (err) { console.error(err); }
   };
 

@@ -12,7 +12,8 @@ const AddCustomerForm = ({ onCustomerAdded }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch("http://localhost:5000/api/customers", {
+  const base = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+  const response = await fetch(`${base.replace(/\/$/, '')}/api/customers`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

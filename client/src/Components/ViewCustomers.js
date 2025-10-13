@@ -17,7 +17,8 @@ const ViewCustomers = ({ onRefreshParent }) => {
   const fetchData = async () => {
     setLoading(true);
     try {
-      const res = await fetch("http://localhost:5000/api/customers");
+  const base = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+  const res = await fetch(`${base.replace(/\/$/, '')}/api/customers`);
       if (!res.ok) throw new Error("Fetch failed");
       const data = await res.json();
       setCustomers(data);
