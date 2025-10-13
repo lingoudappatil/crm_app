@@ -4,7 +4,8 @@ export default function ViewFollowUps() {
   const [followUps, setFollowUps] = useState([]);
 
   const fetchFollowUps = async () => {
-    const res = await fetch("http://localhost:5000/api/followups");
+  const base = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+  const res = await fetch(`${base.replace(/\/$/, '')}/api/followups`);
     const data = await res.json();
     setFollowUps(data);
   };

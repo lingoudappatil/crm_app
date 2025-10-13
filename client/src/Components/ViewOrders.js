@@ -10,7 +10,8 @@ const ViewOrders = ({ onRefreshParent }) => {
   const fetchData = async () => {
     setLoading(true);
     try {
-      const res = await fetch("http://localhost:5000/api/orders");
+  const base = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+  const res = await fetch(`${base.replace(/\/$/, '')}/api/orders`);
       if (!res.ok) throw new Error("Fetch failed");
       setOrders(await res.json());
     } catch (e) { console.error(e); } finally { setLoading(false); }

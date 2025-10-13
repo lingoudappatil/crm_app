@@ -10,7 +10,8 @@ const ViewLeads = ({ onRefreshParent }) => {
   const fetchData = async () => {
     setLoading(true);
     try {
-      const res = await fetch("http://localhost:5000/api/leads");
+  const base = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+  const res = await fetch(`${base.replace(/\/$/, '')}/api/leads`);
       if (!res.ok) throw new Error("Fetch failed");
       setLeads(await res.json());
     } catch (e) { console.error(e); } finally { setLoading(false); }
