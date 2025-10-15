@@ -1,129 +1,104 @@
-//Components/Order.js
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import FieldRenderer from "./FieldRenderer";
 
-const Order = () => {
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    phone: '',
-    item: '',
-    quantity: '',
-    amount: ''
-  });
+const STORAGE_KEY = "order_fields";
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+export default function Order() {
+  const [fields, setFields] = useState([]);
+  const [values, setValues] = useState({});
+  const [submitted, setSubmitted] = useState(null);
+  const [loading, setLoading] = useState(false);
 
+  // base url for API
+  const defaultBase = process.env.NODE_ENV === 'development' ? 'http://localhost:5000' : '';
+  const baseUrl = process.env.REACT_APP_API_URL || defaultBase;
+
+  useEffect(() => {
     try {
-  const base = process.env.REACT_APP_API_URL || 'http://localhost:5000';
-  const response = await fetch(`${base.replace(/\/$/, '')}/api/orders`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          ...formData,
-          quantity: Number(formData.quantity), // Convert to number
-          amount: Number(formData.amount)     // Convert to number
-        }),
-      });
-
-      const responseData = await response.json();
-
-      if (!response.ok) {
-        throw new Error(responseData.error || "Failed to add order");
-      }
-
-      alert("Order added successfully!");
-      setFormData({
-        name: '',
-        email: '',
-        phone: '',
-        item: '',
-        quantity: '',
-        amount: ''
-      });
-
-    } catch (error) {
-      console.error("Error adding order:", error);
-      alert(`Error: ${error.message}`);
+      const raw = localStorage.getItem(STORAGE_KEY);
+      const cfg = raw ? JSON.parse(raw) : [];
+      const plugged = cfg.filter(f => f.plugged);
+      setFields(plugged);
+      // initialize values for plugged fields
+      const initial = {};
+      plugged.forEach(f => initial[f.id] = f.default || "");
+      setValues(initial);
+    } catch (err) {
+      console.error("Failed to load order fields", err);
+      setFields([]);
     }
-  };
+  }, []);
 
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
+  function onChange(id, v) {
+    setValues(prev => ({ ...prev, [id]: v }));
+  }
+
+  async function submit(e) {
+    e.preventDefault();
+    // basic validation
+    for (const f of fields) {
+      if (f.required && !values[f.id]) {
+        alert(`Please fill required field: ${f.label}`);
+        return;
+      }
+    }
+
+    setLoading(true);
+    try {
+      const payload = { ...values };
+      // send to server
+      const url = baseUrl ? `${baseUrl.replace(/\/$/, '')}/api/orders` : '/api/orders';
+      const res = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || data.message || 'Failed to submit order');
+      setSubmitted({ at: new Date().toISOString(), data: data });
+      // optionally reset values
+      const reset = {};
+      fields.forEach(f => reset[f.id] = f.default || "");
+      setValues(reset);
+    } catch (err) {
+      console.error('Order submit error', err);
+      alert(err.message || 'Submit failed');
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  function resetForm() {
+    const reset = {};
+    fields.forEach(f => reset[f.id] = f.default || "");
+    setValues(reset);
+    setSubmitted(null);
+  }
 
   return (
-    <div className="add-customer-form">
-      <h2>Add Order Details</h2>
-      <form onSubmit={handleSubmit}>
-        <div className="form-group">
-          <label>Customer Name:</label>
-          <input
-            type="text"
-            name="name"
-            value={formData.name}
-            onChange={handleChange}
-            required
-          />
+    <div className="order-page">
+      <h2>Create Order</h2>
+      {fields.length === 0 ? (
+        <p>No fields are plugged in. Go to Settings to add or plug fields.</p>
+      ) : (
+        <form onSubmit={submit} className="order-form">
+          {fields.map(f => (
+            <FieldRenderer key={f.id} field={f} value={values[f.id] || ""} onChange={onChange} />
+          ))}
+
+          <div className="form-actions" style={{ marginTop: 12 }}>
+            <button type="submit" disabled={loading}>{loading ? 'Submitting...' : 'Submit Order'}</button>
+            <button type="button" onClick={resetForm} style={{ marginLeft: 8 }}>Reset</button>
+          </div>
+        </form>
+      )}
+
+      {submitted && (
+        <div className="submitted" style={{ marginTop: 18 }}>
+          <h3>Order Submitted</h3>
+          <pre style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-word' }}>{JSON.stringify(submitted, null, 2)}</pre>
         </div>
-        <div className="form-group">
-          <label>Email:</label>
-          <input
-            type="email"
-            name="email"
-            value={formData.email}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <div className="form-group">
-          <label>Phone:</label>
-          <input
-            type="tel"
-            name="phone"
-            value={formData.phone}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <div className="form-group">
-          <label>Item Name:</label>
-          <input
-            type="text"
-            name="item"
-            value={formData.item}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <div className="form-group">
-          <label>Quantity:</label>
-          <input
-            type="number"
-            name="quantity"
-            value={formData.quantity}
-            onChange={handleChange}
-            required
-            min="1"
-          />
-        </div>
-        <div className="form-group">
-          <label>Amount:</label>
-          <input
-            type="number"
-            name="amount"
-            value={formData.amount}
-            onChange={handleChange}
-            required
-            min="0"
-          />
-        </div>
-        <button type="submit">Submit Order</button>
-      </form>
+      )}
     </div>
   );
-};
-
-export default Order;
+}
