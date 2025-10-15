@@ -244,12 +244,15 @@
   }
   /* Add Customer Form Styles */
 .add-customer-form {
-  max-width: 500px;
-  margin: 20px auto;
+  /* Use full width of the main content area so add pages fill the column */
+  width: 100%;
+  max-width: none;
+  margin: 12px 0; /* vertical spacing inside main content */
   padding: 20px;
   background: #f5f5f5;
   border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.06);
+  box-sizing: border-box;
 }
 
 .dark .add-customer-form {
@@ -547,4 +550,14 @@
   border: 1px solid #ddd;
   padding: 8px;
   text-align: center;
+}
+
+/* Ensure module add/view containers fill the main content column */
+.main-content .add-customer-form,
+.main-content .followup-form,
+.main-content .todo-container,
+.main-content .order-form,
+.main-content .submitted {
+  width: 100%;
+  box-sizing: border-box;
 }
