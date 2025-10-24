@@ -100,10 +100,12 @@ const HomePage = ({ setCurrentPage, loggedInUser }) => {
   }, [activeModule]);
 
   const toggleModule = (mod) => {
-    if (expandedModule === mod) setExpandedModule(null);
-    else setExpandedModule(mod);
-    setActiveModule(mod);
-    setActiveSub(null);
+    if (expandedModule === mod) {
+      setExpandedModule(null);
+      setActiveModule('Dashboard');  // Return to dashboard when collapsing
+    } else {
+      setExpandedModule(mod);
+    }
   };
 
   const handleSelectSub = (mod, sub) => {
@@ -212,7 +214,7 @@ const HomePage = ({ setCurrentPage, loggedInUser }) => {
       case "Lead":
         if (activeSub === "Add") return <Lead onAdded={fetchLeadsCount} />;
         if (activeSub === "View") return <ViewLeads onRefreshParent={fetchLeadsCount} />;
-        return <div><p>Select Add or View under Leads.</p></div>;
+        return null;
 
       case "Quotation":
         if (activeSub === "Add") return <Quotation />;
