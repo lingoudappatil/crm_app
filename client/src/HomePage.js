@@ -1,17 +1,17 @@
 // HomePage.jsx
 import React, { useState, useEffect } from "react";
 import "./HomePage.css";
-import Lead from "./Components/Lead";
+import Lead from "./Components/Leads/AddLead";
 import Quotation from "./Components/Quotation";
-import AddCustomerForm from "./Components/AddCustomerForm";
+import AddCustomerForm from "./Components/Customer/AddCustomer";
 import Order from "./Components/Order";
-import ViewCustomers from "./Components/ViewCustomers";
-import ViewLeads from "./Components/ViewLeads";
+import ViewCustomers from "./Components/Customer/ViewCustomer";
+import ViewLeads from "./Components/Leads/ViewLeads";
 import ViewQuotations from "./Components/ViewQuotations";
-import ViewOrders from "./Components/ViewOrders";
-import ViewFollowUps from "./Components/ViewFollowUps";
+import ViewOrders from "./Components/Order/ViewOrder";
+import ViewFollowUps from "./Components/FollowUps/ViewFollowUp";
 import Todo from "./Components/Todo";
-import FollowUpPage from "./Components/AddFollowups";
+import FollowUpPage from "./Components/FollowUps/AddFollowUp";
 
 import { BarChart, Bar, PieChart, Pie, XAxis, YAxis, Tooltip, Legend, CartesianGrid, ResponsiveContainer, Cell } from "recharts";
 
@@ -88,7 +88,6 @@ const HomePage = ({ setCurrentPage, loggedInUser }) => {
       }
     } catch (err) { console.error(err); }
   };
-
   
   useEffect(() => {
     if (activeModule === "Dashboard") {
@@ -106,9 +105,7 @@ const HomePage = ({ setCurrentPage, loggedInUser }) => {
     } else {
       setExpandedModule(mod);
     }
-  };
-
-  const handleSelectSub = (mod, sub) => {
+  };  const handleSelectSub = (mod, sub) => {
     setActiveModule(mod);
     setActiveSub(sub);
   };
@@ -219,22 +216,22 @@ const HomePage = ({ setCurrentPage, loggedInUser }) => {
       case "Quotation":
         if (activeSub === "Add") return <Quotation />;
         if (activeSub === "View") return <ViewQuotations onRefreshParent={fetchQuotationsCount} />;
-        return <div><p>Select Add or View under Quotations.</p></div>;
+        return null;
 
       case "Order":
         if (activeSub === "Add") return <Order />;
         if (activeSub === "View") return <ViewOrders onRefreshParent={fetchOrdersCount} />;
-        return <div><p>Select Add or View under Orders.</p></div>;
+        return null;
 
       case "Customer":
         if (activeSub === "Add") return <AddCustomerForm onCustomerAdded={fetchCustomerCount} />;
         if (activeSub === "View") return <ViewCustomers onRefreshParent={fetchCustomerCount} />;
-        return <div><p>Select Add or View under Customers.</p></div>;
+        return null;
 
       case "Follow-Up":
         if (activeSub === "Add") return <FollowUpPage onCustomerAdded={fetchCustomerCount} />;
         if (activeSub === "View") return <ViewFollowUps onRefreshParent={fetchCustomerCount} />;
-        return <div><p>Select Add or View under Follow-Ups.</p></div>;
+        return null;
 
       case "ToDo":
         return <Todo />;
