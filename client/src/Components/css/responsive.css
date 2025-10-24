@@ -1,0 +1,66 @@
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .main-content { padding: 15px; }
+  .stats-container {
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 15px;
+  }
+  .charts-container { grid-template-columns: 1fr; gap: 20px; }
+}
+
+@media (max-width: 768px) {
+  .sidebar { width: 60px; padding: 10px; }
+  .main-content { margin-left: 60px; padding: 12px; }
+  .section-title { font-size: 1.5rem; margin: 15px 0 20px 0; text-align: center; }
+  .stats-container { grid-template-columns: 1fr; gap: 12px; padding: 0; }
+  .stat-box { padding: 20px; min-height: 100px; }
+  .stat-value { font-size: 1.8rem; }
+  .stat-icon { font-size: 2rem; }
+  .add-customer-form,
+  .followup-form,
+  .order-form,
+  .todo-container { padding: 20px; margin: 15px 0; }
+  .charts-container { gap: 15px; margin: 20px 0; }
+  .chart-wrapper { padding: 20px; }
+  .data-table thead { display: none; }
+  .data-table tbody td { display: block; width: 100%; }
+  .data-table tbody tr { margin-bottom: 12px; border-bottom: 1px solid #eee; }
+}
+
+@media (max-width: 700px) {
+  .container { height: auto; min-height: 100vh; }
+  .content-wrapper { display: block; }
+  .sidebar {
+    position: fixed;
+    left: 0;
+    top: 60px;
+    bottom: 0;
+    width: 60px;
+    z-index: 1200;
+    overflow-y: auto;
+    background-color: #222;
+    padding-top: 10px;
+  }
+  .sidebar.expanded { width: 180px; }
+  .main-content { margin: 0; padding: 16px; padding-top: 80px; width: 100%; box-sizing: border-box; }
+  .page-content, .dashboard-content { width: 100%; max-width: 100%; box-sizing: border-box; padding-left: 8px; padding-right: 8px; }
+  .search-container { left: auto; right: 16px; transform: none; position: relative; }
+  .search-bar { width: 140px; }
+  .stats-container, .stats-grid, .charts-container { overflow-x: hidden; }
+  .chart-wrapper, .stat-card, .stat-box { min-width: 0; width: 100%; }
+}
+
+@media (max-width: 480px) {
+  .main-content { padding: 10px; }
+  .section-title { font-size: 1.3rem; }
+  .stat-box { padding: 15px; flex-direction: column; text-align: center; }
+  .stat-icon { margin-left: 0; margin-top: 10px; }
+  .add-customer-form,
+  .followup-form,
+  .order-form,
+  .todo-container { padding: 15px; }
+  .data-table { font-size: 0.9rem; }
+  .data-table thead th,
+  .data-table tbody td { padding: 8px; }
+  .stats-grid { grid-template-columns: 1fr; }
+}

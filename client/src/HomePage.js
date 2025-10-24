@@ -1,16 +1,16 @@
 // HomePage.jsx
 import React, { useState, useEffect } from "react";
-import "./HomePage.css";
+import "./Components/css/main.css";
 import Lead from "./Components/Leads/AddLead";
-import Quotation from "./Components/Quotation";
+import Quotation from "./Components/Quotation/AddQuotation";
 import AddCustomerForm from "./Components/Customer/AddCustomer";
 import Order from "./Components/Order/AddOrder";
 import ViewCustomers from "./Components/Customer/ViewCustomer";
 import ViewLeads from "./Components/Leads/ViewLeads";
-import ViewQuotations from "./Components/ViewQuotations";
+import ViewQuotations from "./Components/Quotation/ViewQuotation";
 import ViewOrders from "./Components/Order/ViewOrder";
 import ViewFollowUps from "./Components/FollowUps/ViewFollowUp";
-import Todo from "./Components/Todo";
+import Todo from "./Components/TODO/AddTodo";
 import FollowUpPage from "./Components/FollowUps/AddFollowUp";
 
 import { BarChart, Bar, PieChart, Pie, XAxis, YAxis, Tooltip, Legend, CartesianGrid, ResponsiveContainer, Cell } from "recharts";
