@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import FieldRenderer from "./FieldRenderer";
+import FieldRenderer from "../common/FieldRenderer";
 
 const STORAGE_KEY = "order_fields";
 
@@ -15,8 +15,61 @@ export default function Order() {
 
   useEffect(() => {
     try {
-      const raw = localStorage.getItem(STORAGE_KEY);
-      const cfg = raw ? JSON.parse(raw) : [];
+      let raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) {
+        // Set default fields if none exist
+        const defaultFields = [
+          {
+            id: 'customerName',
+            type: 'text',
+            label: 'Customer Name',
+            placeholder: 'Enter customer name',
+            required: true,
+            plugged: true
+          },
+          {
+            id: 'orderDate',
+            type: 'text',
+            label: 'Order Date',
+            default: new Date().toISOString().split('T')[0],
+            required: true,
+            plugged: true
+          },
+          {
+            id: 'amount',
+            type: 'number',
+            label: 'Order Amount',
+            placeholder: 'Enter order amount',
+            required: true,
+            min: 0,
+            plugged: true
+          },
+          {
+            id: 'status',
+            type: 'select',
+            label: 'Order Status',
+            options: [
+              { value: 'pending', label: 'Pending' },
+              { value: 'processing', label: 'Processing' },
+              { value: 'completed', label: 'Completed' },
+              { value: 'cancelled', label: 'Cancelled' }
+            ],
+            default: 'pending',
+            required: true,
+            plugged: true
+          },
+          {
+            id: 'notes',
+            type: 'textarea',
+            label: 'Notes',
+            placeholder: 'Enter any additional notes',
+            plugged: true
+          }
+        ];
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(defaultFields));
+        raw = JSON.stringify(defaultFields);
+      }
+      const cfg = JSON.parse(raw);
       const plugged = cfg.filter(f => f.plugged);
       setFields(plugged);
       // initialize values for plugged fields

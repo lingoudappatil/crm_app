@@ -4,7 +4,7 @@ import "./HomePage.css";
 import Lead from "./Components/Leads/AddLead";
 import Quotation from "./Components/Quotation";
 import AddCustomerForm from "./Components/Customer/AddCustomer";
-import Order from "./Components/Order";
+import Order from "./Components/Order/AddOrder";
 import ViewCustomers from "./Components/Customer/ViewCustomer";
 import ViewLeads from "./Components/Leads/ViewLeads";
 import ViewQuotations from "./Components/ViewQuotations";
@@ -144,21 +144,33 @@ const HomePage = ({ setCurrentPage, loggedInUser }) => {
           <p>📊 Welcome to Lingouda's Dashboard! Overview of activities & sales operations.</p>
           
           <div className="stats-grid">
-            <div className="stat-card">
-              <h3>Customers</h3>
-              <p className="stat-number">{customerCount}</p>
+            <div className="stat-card customers">
+              <div className="stat-content">
+                <div className="stat-label">Customers</div>
+                <div className="stat-value">{customerCount}</div>
+              </div>
+              <div className="stat-icon">👥</div>
             </div>
-            <div className="stat-card">
-              <h3>Leads</h3>
-              <p className="stat-number">{leadsCount}</p>
+            <div className="stat-card leads">
+              <div className="stat-content">
+                <div className="stat-label">Leads</div>
+                <div className="stat-value">{leadsCount}</div>
+              </div>
+              <div className="stat-icon">📈</div>
             </div>
-            <div className="stat-card">
-              <h3>Quotations</h3>
-              <p className="stat-number">{quotationsCount}</p>
+            <div className="stat-card quotations">
+              <div className="stat-content">
+                <div className="stat-label">Quotations</div>
+                <div className="stat-value">{quotationsCount}</div>
+              </div>
+              <div className="stat-icon">📃</div>
             </div>
-            <div className="stat-card">
-              <h3>Orders</h3>
-              <p className="stat-number">{ordersCount}</p>
+            <div className="stat-card orders">
+              <div className="stat-content">
+                <div className="stat-label">Orders</div>
+                <div className="stat-value">{ordersCount}</div>
+              </div>
+              <div className="stat-icon">📦</div>
             </div>
           </div>
 
