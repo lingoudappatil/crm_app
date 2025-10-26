@@ -10,6 +10,33 @@
   position: sticky;
   top: 0;
   z-index: 1000;
+  flex-wrap: wrap;
+}
+
+@media (max-width: 768px) {
+  .top-bar {
+    height: auto;
+    padding: 10px;
+    gap: 10px;
+  }
+  
+  .search-container {
+    position: relative;
+    left: auto;
+    transform: none;
+    width: 100%;
+    order: 2;
+  }
+  
+  .search-bar {
+    width: 100%;
+    max-width: none;
+  }
+  
+  .top-bar-title {
+    font-size: 1.1rem;
+    margin-right: auto;
+  }
 }
 
 .top-bar.light { background-color: #333; }
