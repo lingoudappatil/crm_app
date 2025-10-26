@@ -1,11 +1,9 @@
 /* Forms */
-.add-customer-form,
-.followup-form,
-.order-form,
-.todo-container {
+/* ✅ Universal form container for all 'Add' forms */
+.add-form {
   width: 100%;
-  max-width: 800px;
-  margin: 20px 0;
+  max-width: 900px;
+  margin: 30px auto;
   padding: 25px;
   background: #f8f9fa;
   border-radius: 10px;
@@ -13,29 +11,48 @@
   box-sizing: border-box;
 }
 
-.dark .add-customer-form,
-.dark .followup-form,
-.dark .order-form,
-.dark .todo-container {
+.dark .add-form {
   background: #2a2a2a;
-  color: white;
+  color: #fff;
 }
 
+/* ✅ Title styling */
+.add-form h2 {
+  text-align: center;
+  margin-bottom: 25px;
+  color: #333;
+}
+
+.dark .add-form h2 {
+  color: #fff;
+}
+
+/* ✅ Row layout for multi-column structure */
+.form-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+/* ✅ Each input group (label + field) */
 .form-group {
-  margin-bottom: 20px;
-  width: 100%;
-  
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 calc(50% - 20px); /* 2 columns by default */
+  min-width: 250px;
 }
 
 .form-group label {
-  display: block;
   margin-bottom: 8px;
   color: #333;
   font-weight: 500;
 }
 
-.dark .form-group label { color: #ccc; }
+.dark .form-group label {
+  color: #ccc;
+}
 
+/* ✅ Input, Select, Textarea styling */
 .form-group input,
 .form-group select,
 .form-group textarea {
@@ -43,7 +60,6 @@
   padding: 12px;
   border: 1px solid #ddd;
   border-radius: 6px;
-  box-sizing: border-box;
   font-size: 1rem;
   transition: border-color 0.3s ease;
 }
@@ -56,12 +72,59 @@
   box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
 }
 
+/* ✅ Dark mode for input fields */
 .dark .form-group input,
 .dark .form-group select,
 .dark .form-group textarea {
   background-color: #333;
   border-color: #444;
   color: white;
+}
+
+/* ✅ Responsive behavior */
+@media (max-width: 768px) {
+  .form-group {
+    flex: 1 1 100%; /* One column on mobile */
+  }
+}
+
+@media (min-width: 1200px) {
+  .form-group {
+    flex: 1 1 calc(33.33% - 20px); /* 3 columns on large screens */
+  }
+}
+
+/* ✅ Full-width textarea (optional) */
+textarea {
+  resize: vertical;
+}
+
+/* ✅ Submit button styling */
+.submit-button {
+  display: block;
+  width: 200px;
+  margin: 30px auto 0;
+  padding: 12px 20px;
+  font-size: 1rem;
+  font-weight: 600;
+  color: white;
+  background-color: #3498db;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.submit-button:hover {
+  background-color: #2980b9;
+}
+
+.dark .submit-button {
+  background-color: #1e90ff;
+}
+
+.dark .submit-button:hover {
+  background-color: #0078d7;
 }
 
 /* Buttons in forms */

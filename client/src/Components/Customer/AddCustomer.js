@@ -39,35 +39,41 @@ const AddCustomerForm = ({ onCustomerAdded }) => {
   };
 
   return (
-    <div className="add-customer-form">
-      <h2>Add Customer</h2>
-      <form onSubmit={handleSubmit}>
-        {/* Form fields remain the same */}
-        <div className="form-group">
-          <label>Full Name:</label>
-          <input type="text" name="name" value={formData.name} onChange={handleChange} required />
-        </div>
-        <div className="form-group">
-          <label>Email:</label>
-          <input type="email" name="email" value={formData.email} onChange={handleChange} required />
-        </div>
-        <div className="form-group">
-          <label>Phone Number:</label>
-          <input type="tel" name="phone" value={formData.phone} onChange={handleChange} required />
-        </div>
-        <div className="form-group">
-          <label>Address:</label>
-          <textarea name="address" value={formData.address} onChange={handleChange} rows="3" />
-        </div>
-        <div className="form-group">
-          <label>State:</label>
-          <input type="text" name="state" value={formData.state} onChange={handleChange} required />
-        </div>
-        <button type="submit" className="submit-button">
-          Add Customer
-        </button>
-      </form>
+   <div className="add-form">
+  <h2>Add Customer</h2>
+  <form onSubmit={handleSubmit}>
+    <div className="form-row">
+      <div className="form-group">
+        <label>Full Name:</label>
+        <input type="text" name="name" value={formData.name} onChange={handleChange} required />
+      </div>
+
+      <div className="form-group">
+        <label>Email:</label>
+        <input type="email" name="email" value={formData.email} onChange={handleChange} required />
+      </div>
+
+      <div className="form-group">
+        <label>Phone Number:</label>
+        <input type="tel" name="phone" value={formData.phone} onChange={handleChange} required />
+      </div>
+
+      <div className="form-group">
+        <label>Address:</label>
+        <textarea name="address" value={formData.address} onChange={handleChange} rows="3" />
+      </div>
+
+      <div className="form-group">
+        <label>State:</label>
+        <input type="text" name="state" value={formData.state} onChange={handleChange} required />
+      </div>
     </div>
+
+    <button type="submit" className="submit-button">Add Customer</button>
+  </form>
+</div>
+
+
   );
 };
 export default AddCustomerForm;

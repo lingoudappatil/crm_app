@@ -75,65 +75,40 @@ const Lead = () => {
   const minutes = Array.from({ length: 12 }, (_, i) => (i * 5).toString().padStart(2, "0"));
 
   return (
-    <div className="add-customer-form">
-      <h2>New Lead Registration for Sale</h2>
-      <form onSubmit={handleSubmit}>
-        <div className="form-group">
-          <label>Full Name:</label>
-          <input type="text" name="name" value={formData.name} onChange={handleChange} required />
-        </div>
-        <div className="form-group">
-          <label>Email:</label>
-          <input type="email" name="email" value={formData.email} onChange={handleChange} required />
-        </div>
-        <div className="form-group">
-          <label>Phone Number:</label>
-          <input type="tel" name="phone" value={formData.phone} onChange={handleChange} required />
-        </div>
-        <div className="form-group">
-          <label>Address:</label>
-          <textarea name="address" value={formData.address} onChange={handleChange} rows="3" />
-        </div>
-        <div className="form-group">
-          <label>State:</label>
-          <input type="text" name="state" value={formData.state} onChange={handleChange} required />
-        </div>
+    <div className="add-form">
+  <h2>Add Lead</h2>
+  <form onSubmit={handleSubmit}>
+    <div className="form-row">
+      <div className="form-group">
+        <label>Full Name:</label>
+        <input type="text" name="name" value={formData.name} onChange={handleChange} required />
+      </div>
 
-        <h3>Follow-Up Details</h3>
-        <div className="form-group">
-          <label>Follow-Up Date:</label>
-          <input type="date" name="followUpDate" value={formData.followUpDate} onChange={handleChange} required />
-        </div>
-        <div className="form-group">
-          <label>Follow-Up Time:</label>
-          <div style={{ display: "flex", gap: "5px" }}>
-            <select name="followUpHour" value={formData.followUpHour} onChange={handleChange}>
-              {hours.map((h) => (
-                <option key={h} value={h}>{h}</option>
-              ))}
-            </select>
-            :
-            <select name="followUpMinute" value={formData.followUpMinute} onChange={handleChange}>
-              {minutes.map((m) => (
-                <option key={m} value={m}>{m}</option>
-              ))}
-            </select>
-            <select name="followUpAMPM" value={formData.followUpAMPM} onChange={handleChange}>
-              <option value="AM">AM</option>
-              <option value="PM">PM</option>
-            </select>
-          </div>
-        </div>
-        <div className="form-group">
-          <label>Follow-Up Remark:</label>
-          <textarea name="followUpRemark" value={formData.followUpRemark} onChange={handleChange} required />
-        </div>
+      <div className="form-group">
+        <label>Email:</label>
+        <input type="email" name="email" value={formData.email} onChange={handleChange} required />
+      </div>
 
-        <button type="submit" className="submit-button">
-          Add Lead
-        </button>
-      </form>
+      <div className="form-group">
+        <label>Phone Number:</label>
+        <input type="tel" name="phone" value={formData.phone} onChange={handleChange} required />
+      </div>
+
+      <div className="form-group">
+        <label>Address:</label>
+        <textarea name="address" value={formData.address} onChange={handleChange} rows="3" />
+      </div>
+
+      <div className="form-group">
+        <label>State:</label>
+        <input type="text" name="state" value={formData.state} onChange={handleChange} required />
+      </div>
     </div>
+
+    <button type="submit" className="submit-button">Add Lead</button>
+  </form>
+</div>
+
   );
 };
 
