@@ -95,7 +95,6 @@ const Order = () => {
     <button type="submit" className="submit-button">Add Order</button>
   </form>
 </div>
-
   );
 };
 export default Order;
