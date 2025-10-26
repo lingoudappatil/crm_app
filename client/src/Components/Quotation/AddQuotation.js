@@ -52,7 +52,7 @@ const Quotation = () => {
 
   return(
     <div className="add-form">
-  <h2>Add Customer</h2>
+  <h2>Add Quotation</h2>
   <form onSubmit={handleSubmit}>
     <div className="form-row">
       <div className="form-group">
@@ -76,6 +76,10 @@ const Quotation = () => {
         <div className="form-group">
           <label>Quantity:</label>
           <input type="number" name="quantity" value={formData.quantity} onChange={handleChange} required />
+        </div>
+        <div className="form-group">
+          <label>Discount</label>
+          <input type="tel" name="phone" value={formData.phone} onChange={handleChange} required />
         </div>
         <div className="form-group">
           <label>Amount:</label>

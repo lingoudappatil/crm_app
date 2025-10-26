@@ -17,7 +17,7 @@ const Order = () => {
     
     try {
   const base = process.env.REACT_APP_API_URL || 'http://localhost:5000';
-  const response = await fetch(`${base.replace(/\/$/, '')}/api/quotations`, {
+  const response = await fetch(`${base.replace(/\/$/, '')}/api/Order`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -26,7 +26,7 @@ const Order = () => {
       });
 
       if (response.ok) {
-        alert("Quotation added successfully!");
+        alert("Order added successfully!");
         setFormData({
           name: '',
           email: '',
@@ -38,10 +38,10 @@ const Order = () => {
           state: ''
         });
       } else {
-        alert("Failed to add quotation.");
+        alert("Failed to add Order.");
       }
     } catch (error) {
-      console.error("Error adding quotation:", error);
+      console.error("Error adding Order:", error);
       alert("Error connecting to server.");
     }
   };
@@ -98,5 +98,4 @@ const Order = () => {
 
   );
 };
-
 export default Order;
