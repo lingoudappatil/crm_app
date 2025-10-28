@@ -28,13 +28,41 @@
 }
 
 /* ✅ Row layout for multi-column structure */
+/* 🌟 Main Form Container */
+.add-form {
+  max-width: 1100px;
+  margin: 30px auto;
+  padding: 30px;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  font-family: "Poppins", sans-serif;
+}
+
+.dark .add-form {
+  background: #222;
+  color: #fff;
+}
+
+/* 🌟 Title */
+.add-form h2 {
+  text-align: center;
+  margin-bottom: 25px;
+  color: #333;
+}
+
+.dark .add-form h2 {
+  color: #eee;
+}
+
+/* 🌟 Row Container */
 .form-row {
   display: flex;
   flex-wrap: wrap;
-  gap: 20px;
+  gap: 50px;
 }
 
-/* ✅ Each input group (label + field) */
+/* 🌟 Each input group (label + field) */
 .form-group {
   display: flex;
   flex-direction: column;
@@ -52,12 +80,12 @@
   color: #ccc;
 }
 
-/* ✅ Input, Select, Textarea styling */
+/* 🌟 Input, Select, Textarea styling */
 .form-group input,
 .form-group select,
 .form-group textarea {
   width: 100%;
-  padding: 12px;
+  padding: 10px;
   border: 1px solid #ddd;
   border-radius: 6px;
   font-size: 1rem;
@@ -72,7 +100,7 @@
   box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
 }
 
-/* ✅ Dark mode for input fields */
+/* 🌙 Dark mode for input fields */
 .dark .form-group input,
 .dark .form-group select,
 .dark .form-group textarea {
@@ -81,7 +109,67 @@
   color: white;
 }
 
-/* ✅ Responsive behavior */
+/* 🌟 Submit Button */
+.submit-button {
+  background: #3498db;
+  color: white;
+  padding: 12px 25px;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  cursor: pointer;
+  margin-top: 20px;
+  transition: background 0.3s ease;
+}
+
+.submit-button:hover {
+  background: #2980b9;
+}
+
+/* 🌙 Dark Mode Button */
+.dark .submit-button {
+  background: #2980b9;
+}
+
+.dark .submit-button:hover {
+  background: #1f6391;
+}
+
+/* 🌟 Table styling (if you have data table below the form) */
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 25px;
+  font-size: 15px;
+}
+
+.data-table th,
+.data-table td {
+  padding: 12px;
+  border: 1px solid #ddd;
+  text-align: left;
+}
+
+.data-table th {
+  background: #3498db;
+  color: white;
+}
+
+.data-table tr:nth-child(even) {
+  background: #f9f9f9;
+}
+
+/* 🌙 Dark Mode Table */
+.dark .data-table th {
+  background: #2980b9;
+}
+
+.dark .data-table td {
+  background: #333;
+  color: #eee;
+}
+
+/* 🌟 Responsive behavior */
 @media (max-width: 768px) {
   .add-form {
     margin: 15px auto;
@@ -106,17 +194,19 @@
     font-size: 14px;
   }
 
-  .data-table td, 
+  .data-table td,
   .data-table th {
     padding: 8px;
   }
 }
 
+/* 🌟 Large screens (3-column layout) */
 @media (min-width: 1200px) {
   .form-group {
-    flex: 1 1 calc(33.33% - 20px); /* 3 columns on large screens */
+    flex: 1 1 calc(33.33% - 20px);
   }
 }
+
 
 /* ✅ Full-width textarea (optional) */
 textarea {
@@ -128,7 +218,7 @@ textarea {
   display: block;
   width: 200px;
   margin: 30px auto 0;
-  padding: 12px 20px;
+  padding: 10px 20px;
   font-size: 1rem;
   font-weight: 600;
   color: white;
