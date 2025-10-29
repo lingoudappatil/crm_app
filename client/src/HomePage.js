@@ -100,12 +100,8 @@ const HomePage = ({ setCurrentPage, loggedInUser }) => {
   }, [activeModule]);
 
   const toggleModule = (mod) => {
-    if (expandedModule === mod) {
-      setExpandedModule(null);
-      setActiveModule('Dashboard');  // Return to dashboard when collapsing
-    } else {
-      setExpandedModule(mod);
-    }
+    // Only toggle the expanded state, don't change the active module
+    setExpandedModule(expandedModule === mod ? null : mod);
   };  const handleSelectSub = (mod, sub) => {
     setActiveModule(mod);
     setActiveSub(sub);
