@@ -11,6 +11,7 @@ import ViewQuotations from "./Components/Quotation/ViewQuotation";
 import ViewOrders from "./Components/Order/ViewOrder";
 import ViewFollowUps from "./Components/FollowUps/ViewFollowUp";
 import Todo from "./Components/TODO/AddTodo";
+import ViewTodo from "./Components/TODO/ViewTodo";  
 import FollowUpPage from "./Components/FollowUps/AddFollowUp";
 
 import { BarChart, Bar, PieChart, Pie, XAxis, YAxis, Tooltip, Legend, CartesianGrid, ResponsiveContainer, Cell } from "recharts";
@@ -246,7 +247,9 @@ const HomePage = ({ setCurrentPage, loggedInUser }) => {
         return null;
 
       case "ToDo":
-        return <Todo />;
+       if (activeSub === "Add") return <Todo onCustomerAdded={fetchCustomerCount} />;
+        if (activeSub === "View") return <ViewTodo onRefreshParent={fetchCustomerCount} />;
+        return null;
 
       default:
         return <div>Welcome — choose a module from the left.</div>;
@@ -317,14 +320,6 @@ const HomePage = ({ setCurrentPage, loggedInUser }) => {
     </li>
   ))}
 
-  {/* ToDo */}
-  <li
-    className={`sidebar-list-item ${activeModule === "ToDo" ? "active" : ""}`}
-    onClick={() => { setActiveModule("ToDo"); setActiveSub(null); setExpandedModule(null); }}
-  >
-    {getIcon("ToDo")}
-    {sidebarOpen && <span style={{ marginLeft: "10px" }}>To Do</span>}
-  </li>
 
   {/* Logout at bottom */}
   <li

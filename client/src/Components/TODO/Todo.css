@@ -1,16 +1,18 @@
 /* ============================= */
-/* Todo Container Wrapper */
+/* Sales App - Todo / Task Module */
 /* ============================= */
+
 .todo-container {
   width: 100%;
-  max-width: none;
-  margin: 12px 0;
-  padding: 24px;
-  background-color: white;
+  max-width: 900px;
+  margin: 24px auto;
+  padding: 28px;
+  background: #ffffff;
   border-radius: 12px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.06);
-  font-family: 'Segoe UI', Arial, sans-serif;
-  border: 1px solid #edf2f7;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
+  border: 1px solid #e5e7eb;
+  font-family: "Poppins", "Segoe UI", sans-serif;
+  transition: all 0.3s ease-in-out;
   box-sizing: border-box;
 }
 
@@ -18,69 +20,66 @@
 /* Heading */
 /* ============================= */
 .todo-container h2 {
-  text-align: center;
-  margin-bottom: 24px;
-  color: #2d3748;
-  font-size: 1.8rem;
+  text-align: left;
+  margin-bottom: 28px;
+  color: #1e293b;
+  font-size: 1.6rem;
   font-weight: 600;
-  padding-bottom: 12px;
-  border-bottom: 2px solid #edf2f7;
+  border-left: 4px solid #3b82f6;
+  padding-left: 10px;
 }
 
 /* ============================= */
-/* Input Field and Add Button Wrapper */
+/* Input Field + Button */
 /* ============================= */
 .todo-container .input-group {
   display: flex;
-  gap: 10px;
-  margin-bottom: 20px;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 24px;
 }
 
-/* ============================= */
-/* Input Field */
-/* ============================= */
 .todo-container input[type="text"] {
   flex: 1;
   padding: 12px 16px;
-  border: 2px solid #e2e8f0;
+  border: 1.5px solid #cbd5e1;
   border-radius: 8px;
-  font-size: 16px;
-  transition: all 0.2s ease;
+  font-size: 15px;
   background-color: #f8fafc;
+  color: #1e293b;
+  transition: all 0.2s ease;
 }
 
 .todo-container input[type="text"]:focus {
+  border-color: #3b82f6;
   outline: none;
-  border-color: #4299e1;
-  background-color: white;
-  box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.15);
+  background: #ffffff;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
 }
 
 /* ============================= */
 /* Add Button */
 /* ============================= */
-.todo-container button.add-button {
+.todo-container .add-button {
   padding: 12px 24px;
   border: none;
   border-radius: 8px;
-  background-color: #3b82f6;
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
   color: #fff;
-  cursor: pointer;
-  font-size: 16px;
   font-weight: 500;
-  transition: all 0.2s ease;
-  box-shadow: 0 2px 4px rgba(59, 130, 246, 0.2);
+  cursor: pointer;
+  font-size: 15px;
+  transition: all 0.3s ease;
+  box-shadow: 0 3px 8px rgba(59, 130, 246, 0.25);
 }
 
-.todo-container button.add-button:hover {
-  background-color: #2563eb;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 6px rgba(59, 130, 246, 0.25);
+.todo-container .add-button:hover {
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  transform: translateY(-2px);
 }
 
-.todo-container button.add-button:active {
+.todo-container .add-button:active {
   transform: translateY(0);
-  box-shadow: 0 2px 4px rgba(59, 130, 246, 0.2);
 }
 
 /* ============================= */
@@ -99,76 +98,57 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: #fff;
+  background: #f9fafb;
   margin-bottom: 12px;
-  padding: 16px;
+  padding: 16px 20px;
   border-radius: 10px;
-  border: 1px solid #e2e8f0;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-  transition: all 0.2s ease;
+  border: 1px solid #e5e7eb;
+  transition: all 0.25s ease;
 }
 
 .todo-container li:hover {
-  background-color: #f8fafc;
+  background-color: #f1f5f9;
   transform: translateY(-1px);
-  box-shadow: 0 4px 6px rgba(0,0,0,0.07);
-  border-color: #cbd5e1;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.05);
 }
 
-/* ============================= */
-/* Todo Text */
-/* ============================= */
 .todo-container li span {
   flex: 1;
+  color: #334155;
+  font-size: 15px;
   word-break: break-word;
 }
 
 /* ============================= */
-/* Complete and Delete Buttons */
+/* Action Buttons */
 /* ============================= */
 .todo-container li button {
-  margin-left: 12px;
-  padding: 8px 16px;
+  margin-left: 10px;
+  padding: 8px 14px;
   border: none;
   border-radius: 6px;
-  cursor: pointer;
   font-size: 14px;
   font-weight: 500;
-  transition: all 0.2s ease;
-  display: flex;
-  align-items: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
 }
 
-.todo-container li button.complete-btn {
-  background-color: #10b981;
-  color: #fff;
-  box-shadow: 0 2px 4px rgba(16, 185, 129, 0.2);
+.todo-container .complete-btn {
+  background: #16a34a;
+  color: white;
 }
 
-.todo-container li button.complete-btn:hover {
-  background-color: #059669;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 6px rgba(16, 185, 129, 0.25);
+.todo-container .complete-btn:hover {
+  background: #15803d;
 }
 
-.todo-container li button.complete-btn:active {
-  transform: translateY(0);
+.todo-container .delete-btn {
+  background: #ef4444;
+  color: white;
 }
 
-.todo-container li button.delete-btn {
-  background-color: #ef4444;
-  color: #fff;
-  box-shadow: 0 2px 4px rgba(239, 68, 68, 0.2);
-}
-
-.todo-container li button.delete-btn:hover {
-  background-color: #dc2626;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 6px rgba(239, 68, 68, 0.25);
-}
-
-.todo-container li button.delete-btn:active {
-  transform: translateY(0);
+.todo-container .delete-btn:hover {
+  background: #dc2626;
 }
 
 /* ============================= */
@@ -191,14 +171,22 @@
   .todo-container {
     margin: 10px;
     padding: 16px;
+    max-width: calc(100% - 20px);
   }
 
   .todo-container .input-group {
     flex-direction: column;
+    width: 100%;
   }
 
   .todo-container input[type="text"] {
     margin-bottom: 10px;
+    width: 100%;
+  }
+
+  .todo-container .add-button {
+    width: 100%;
+    margin-top: 8px;
   }
 
   .todo-container li {
@@ -210,5 +198,7 @@
   .todo-container li button {
     margin: 4px 0;
     padding: 10px;
+    width: 100%;
+    justify-content: center;
   }
 }
