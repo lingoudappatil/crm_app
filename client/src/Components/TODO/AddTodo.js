@@ -178,55 +178,6 @@ const Todo = () => {
       )}
 
       {/* Todo List */}
-      <DragDropContext onDragEnd={onDragEnd}>
-        <Droppable droppableId="todos">
-          {(provided) => (
-            <ul {...provided.droppableProps} ref={provided.innerRef}>
-              {filteredTodos.length === 0 ? (
-                <li className="empty-state">No todos found. Add one above!</li>
-              ) : (
-                filteredTodos.map((todo, index) => (
-                  <Draggable key={todo.id} draggableId={todo.id} index={index}>
-                    {(provided) => (
-                      <li
-                        ref={provided.innerRef}
-                        {...provided.draggableProps}
-                        {...provided.dragHandleProps}
-                        className={`${todo.completed ? 'completed' : ''} priority-${todo.priority}`}
-                      >
-                        <div className="todo-content">
-                          <input
-                            type="checkbox"
-                            checked={todo.completed}
-                            onChange={() => toggleComplete(todo.id)}
-                          />
-                          <div className="todo-info">
-                            <span className="todo-text">{todo.text}</span>
-                            <div className="todo-meta">
-                              <span className={`category ${todo.category}`}>
-                                {todo.category}
-                              </span>
-                              <span className="due-date">
-                                {todo.dueDate && `Due: ${new Date(todo.dueDate).toLocaleDateString()}`}
-                              </span>
-                            </div>
-                          </div>
-                        </div>
-                        <div className="todo-actions">
-                          <button onClick={() => deleteTodo(todo.id)}>
-                            <FaTrash />
-                          </button>
-                        </div>
-                      </li>
-                    )}
-                  </Draggable>
-                ))
-              )}
-              {provided.placeholder}
-            </ul>
-          )}
-        </Droppable>
-      </DragDropContext>
     </div>
   );
 };
