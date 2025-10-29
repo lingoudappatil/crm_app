@@ -65,7 +65,7 @@ const Quotation = () => {
         <input type="email" name="email" value={formData.email} onChange={handleChange} required />
       </div>
 
-<div className="form-group">
+       <div className="form-group">
           <label>Phone Number:</label>
           <input type="tel" name="phone" value={formData.phone} onChange={handleChange} required />
         </div>

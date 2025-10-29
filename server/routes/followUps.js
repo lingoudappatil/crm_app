@@ -2,7 +2,7 @@ import express from "express";
 import FollowUp from "../models/FollowUp.js";
 
 const router = express.Router();
-
+ 
 // Get all follow-ups
 router.get("/", async (req, res) => {
   try {
