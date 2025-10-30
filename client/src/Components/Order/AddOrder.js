@@ -70,17 +70,35 @@ const Order = () => {
           <input type="tel" name="phone" value={formData.phone} onChange={handleChange} required />
         </div>
         <div className="form-group">
-          <label>Item Name:</label>
-          <input type="text" name="item" value={formData.item} onChange={handleChange} required />
-        </div>
-        <div className="form-group">
-          <label>Quantity:</label>
-          <input type="number" name="quantity" value={formData.quantity} onChange={handleChange} required />
-        </div>
-        <div className="form-group">
-          <label>Amount:</label>
-          <input type="number" name="amount" value={formData.amount} onChange={handleChange} required />
-        </div>
+            <label>Item Name:</label>
+            <input type="text" name="item" value={formData.item} onChange={handleChange} required />
+          </div>
+
+          <div className="form-group">
+            <label>Quantity:</label>
+            <input type="number" name="quantity" value={formData.quantity} onChange={handleChange} required />
+          </div>
+
+          <div className="form-group">
+            <label>Price per Item:</label>
+            <input type="number" name="price" value={formData.price} onChange={handleChange} required />
+          </div>
+
+          <div className="form-group">
+            <label>Tax (%):</label>
+            <input type="number" name="tax" value={formData.tax} onChange={handleChange} required />
+          </div>
+
+          <div className="form-group">
+            <label>Discount (%):</label>
+            <input type="number" name="discountPercent" value={formData.discountPercent} onChange={handleChange} />
+          </div>
+
+          <div className="form-group">
+            <label>Discount Amount:</label>
+            <input type="number" name="discountAmount" value={formData.discountAmount} onChange={handleChange} />
+          </div>
+        
       <div className="form-group">
         <label>Address:</label>
         <textarea name="address" value={formData.address} onChange={handleChange} rows="3" />

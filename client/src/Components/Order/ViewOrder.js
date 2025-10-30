@@ -47,7 +47,7 @@ const ViewOrders = ({ onRefreshParent }) => {
               <tr key={o._id || o.id || i}>
                 <td>{(page - 1) * perPage + i + 1}</td>
                 <td>{o.orderNumber || o.ref || o._id}</td>
-                <td>{o.customerName || o.customer || "-"}</td>
+                <td>{o.name || o.customer || "-"}</td>
                 <td>{o.totalAmount || o.amount || "-"}</td>
                 <td>{o.status || "-"}</td>
                 <td>{o.createdAt ? new Date(o.createdAt).toLocaleString() : "-"}</td>
