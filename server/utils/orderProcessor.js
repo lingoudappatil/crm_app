@@ -3,6 +3,10 @@ const Order = require('../models/Order');
 /**
  * Creates and processes a new order with calculations for subtotal, tax, discount, and total amount
  * @param {Object} orderData - The order information
+ * @param {string} orderData.name - Customer name
+ * @param {string} orderData.email - Customer email
+ * @param {string} orderData.phone - Customer phone
+ * @param {string} orderData.item - Item name
  * @param {number} orderData.quantity - Quantity of items ordered
  * @param {number} orderData.price - Price per unit
  * @param {number} orderData.tax - Tax rate as percentage (e.g., 18 for 18%)
@@ -10,15 +14,37 @@ const Order = require('../models/Order');
  * @param {number} [orderData.discountAmount] - Fixed discount amount
  * @returns {Promise<Object>} Created order object
  */
-async function processOrder({ quantity, price, tax, discountPercent = 0, discountAmount = 0 }) {
+async function processOrder({ 
+    name,
+    email,
+    phone,
+    item,
+    quantity, 
+    price, 
+    tax, 
+    discountPercent = 0, 
+    discountAmount = 0 
+}) {
     try {
         // Input validation
-        if (!quantity || !price || !tax) {
-            throw new Error('Missing required parameters: quantity, price, and tax are required');
+        if (!name || !email || !phone || !item || !quantity || !price || !tax) {
+            throw new Error('Missing required parameters: name, email, phone, item, quantity, price, and tax are required');
         }
 
         if (quantity <= 0 || price <= 0 || tax < 0) {
             throw new Error('Invalid values: quantity and price must be positive, tax must be non-negative');
+        }
+
+        // Basic email validation
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+            throw new Error('Invalid email format');
+        }
+
+        // Basic phone validation (adjust regex according to your phone format requirements)
+        const phoneRegex = /^\+?[\d\s-]{10,}$/;
+        if (!phoneRegex.test(phone)) {
+            throw new Error('Invalid phone number format');
         }
 
         if (discountPercent < 0 || discountPercent > 100) {
@@ -45,18 +71,13 @@ async function processOrder({ quantity, price, tax, discountPercent = 0, discoun
 
         // Create order object with calculated values
         const orderDetails = {
+            name,
+            email,
+            phone,
+            item,
             quantity,
-            pricePerUnit: price,
-            taxRate: tax,
-            subtotal,
-            discountPercent,
-            discountAmount,
-            totalDiscount,
-            amountAfterDiscount,
-            taxAmount,
-            totalAmount,
-            createdAt: new Date(),
-            status: 'pending'
+            amount: totalAmount, // This matches the Order model's required 'amount' field
+            createdAt: new Date()
         };
 
         // Save to database
