@@ -8,6 +8,13 @@
   min-height: calc(100vh - 80px);
   box-sizing: border-box;
   overflow-y: auto;
+  margin-left: 220px; /* Default sidebar width */
+  transition: margin-left 0.3s ease;
+}
+
+/* Adjust margin when sidebar is collapsed */
+.sidebar.collapsed ~ .main-content {
+  margin-left: 60px;
 }
 
 /* Page Content Container */
@@ -35,4 +42,6 @@
   width: 100%;
 }
 
-.dark .section-title { color: #fff; }
+.dark .section-title {
+  color: #fff;
+}

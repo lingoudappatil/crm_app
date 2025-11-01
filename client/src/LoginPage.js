@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
-import "./LoginPage.css";
+import "./AuthPage.css";
 
 const LoginPage = ({ goToRegister, goToHome }) => {
   const [username, setUsername] = useState("");
@@ -22,33 +22,30 @@ const LoginPage = ({ goToRegister, goToHome }) => {
   };
 
   return (
-    <div className="login-container">
-      {/* Optional CRM logo */}
-      {/* <img src="/logo.png" alt="CRM Logo" className="crm-logo" /> */}
-
-      <div className="login-card">
-        <h2>CRM Login</h2>
-        <form onSubmit={handleSubmit} className="login-form">
+    <div className="auth-container">
+      <div className="auth-card">
+        <h2 className="auth-title">CRM Login</h2>
+        <form onSubmit={handleSubmit} className="auth-form">
           <input
             type="text"
             placeholder="Username"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
-            className="login-input"
+            className="auth-input"
           />
           <input
             type="password"
             placeholder="Password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="login-input"
+            className="auth-input"
           />
-          <button type="submit" className="login-button">
+          <button type="submit" className="auth-button">
             Login
           </button>
         </form>
-        <p className="switch-text">
-          Don’t have an account?{" "}
+        <p className="auth-switch-text">
+          Don't have an account?{" "}
           <span onClick={goToRegister}>Register here</span>
         </p>
       </div>
