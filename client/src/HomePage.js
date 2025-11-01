@@ -11,7 +11,7 @@ import ViewQuotations from "./Components/Quotation/ViewQuotation";
 import ViewOrders from "./Components/Order/ViewOrder";
 import ViewFollowUps from "./Components/FollowUps/ViewFollowUp";
 import Todo from "./Components/TODO/AddTodo";
-import ViewTodo from "./Components/TODO/ViewTodo";  
+import ViewTodo from "./Components/TODO/ViewTodo";
 import FollowUpPage from "./Components/FollowUps/AddFollowUp";
 
 import { BarChart, Bar, PieChart, Pie, XAxis, YAxis, Tooltip, Legend, CartesianGrid, ResponsiveContainer, Cell } from "recharts";
@@ -89,7 +89,7 @@ const HomePage = ({ setCurrentPage, loggedInUser }) => {
       }
     } catch (err) { console.error(err); }
   };
-  
+
   useEffect(() => {
     if (activeModule === "Dashboard") {
       fetchCustomerCount();
@@ -102,7 +102,7 @@ const HomePage = ({ setCurrentPage, loggedInUser }) => {
   const toggleModule = (mod) => {
     // Only toggle the expanded state, don't change the active module
     setExpandedModule(expandedModule === mod ? null : mod);
-  };  const handleSelectSub = (mod, sub) => {
+  }; const handleSelectSub = (mod, sub) => {
     setActiveModule(mod);
     setActiveSub(sub);
   };
@@ -139,7 +139,7 @@ const HomePage = ({ setCurrentPage, loggedInUser }) => {
       return (
         <div className="dashboard-content">
           <p>📊 Welcome to Lingouda's Dashboard! Overview of activities & sales operations.</p>
-          
+
           <div className="stats-grid">
             <div className="stat-card customers">
               <div className="stat-content">
@@ -243,7 +243,7 @@ const HomePage = ({ setCurrentPage, loggedInUser }) => {
         return null;
 
       case "ToDo":
-       if (activeSub === "Add") return <Todo onCustomerAdded={fetchCustomerCount} />;
+        if (activeSub === "Add") return <Todo onCustomerAdded={fetchCustomerCount} />;
         if (activeSub === "View") return <ViewTodo onRefreshParent={fetchCustomerCount} />;
         return null;
 
@@ -273,60 +273,60 @@ const HomePage = ({ setCurrentPage, loggedInUser }) => {
         <div className={`sidebar ${sidebarOpen ? "expanded" : "collapsed"}`}>
           <h2 className="logo">{sidebarOpen ? "My Sale App" : "🔷"}</h2>
           <ul className="sidebar-list">
-  {/* Dashboard */}
-  <li
-    className={`sidebar-list-item ${activeModule === "Dashboard" ? "active" : ""}`}
-    onClick={() => { setActiveModule("Dashboard"); setActiveSub(null); setExpandedModule(null); }}
-  >
-    {getIcon("Dashboard")}
-    {sidebarOpen && <span style={{ marginLeft: "10px" }}>Dashboard</span>}
-  </li>
+            {/* Dashboard */}
+            <li
+              className={`sidebar-list-item ${activeModule === "Dashboard" ? "active" : ""}`}
+              onClick={() => { setActiveModule("Dashboard"); setActiveSub(null); setExpandedModule(null); }}
+            >
+              {getIcon("Dashboard")}
+              {sidebarOpen && <span style={{ marginLeft: "10px" }}>Dashboard</span>}
+            </li>
 
-  {/* Modules */}
-  {modules.map((mod) => (
-    <li key={mod} className={`module-group`}>
-      <div
-        className={`sidebar-list-item module-item ${activeModule === mod && !activeSub ? "active" : ""}`}
-        onClick={() => toggleModule(mod)}
-        style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}
-      >
-        <div style={{ display: "flex", alignItems: "center" }}>
-          {getIcon(mod)}
-          {sidebarOpen && <span style={{ marginLeft: "10px" }}>{mod}</span>}
-        </div>
-        {sidebarOpen && <span style={{ marginRight: 8 }}>{expandedModule === mod ? "▾" : "▸"}</span>}
-      </div>
+            {/* Modules */}
+            {modules.map((mod) => (
+              <li key={mod} className={`module-group`}>
+                <div
+                  className={`sidebar-list-item module-item ${activeModule === mod && !activeSub ? "active" : ""}`}
+                  onClick={() => toggleModule(mod)}
+                  style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}
+                >
+                  <div style={{ display: "flex", alignItems: "center" }}>
+                    {getIcon(mod)}
+                    {sidebarOpen && <span style={{ marginLeft: "10px" }}>{mod}</span>}
+                  </div>
+                  {sidebarOpen && <span style={{ marginRight: 8 }}>{expandedModule === mod ? "▾" : "▸"}</span>}
+                </div>
 
-      {expandedModule === mod && (
-        <ul className="submenu">
-          <li
-            className={`sidebar-subitem ${activeModule === mod && activeSub === "Add" ? "active" : ""}`}
-            onClick={() => handleSelectSub(mod, "Add")}
-          >
-            ➕ {sidebarOpen && <span style={{ marginLeft: 8 }}>Add {mod}</span>}
-          </li>
-          <li
-            className={`sidebar-subitem ${activeModule === mod && activeSub === "View" ? "active" : ""}`}
-            onClick={() => handleSelectSub(mod, "View")}
-          >
-            🔎 {sidebarOpen && <span style={{ marginLeft: 8 }}>View {mod}s</span>}
-          </li>
-        </ul>
-      )}
-    </li>
-  ))}
+                {expandedModule === mod && (
+                  <ul className="submenu">
+                    <li
+                      className={`sidebar-subitem ${activeModule === mod && activeSub === "Add" ? "active" : ""}`}
+                      onClick={() => handleSelectSub(mod, "Add")}
+                    >
+                      ➕ {sidebarOpen && <span style={{ marginLeft: 8 }}>Add {mod}</span>}
+                    </li>
+                    <li
+                      className={`sidebar-subitem ${activeModule === mod && activeSub === "View" ? "active" : ""}`}
+                      onClick={() => handleSelectSub(mod, "View")}
+                    >
+                      🔎 {sidebarOpen && <span style={{ marginLeft: 8 }}>View {mod}s</span>}
+                    </li>
+                  </ul>
+                )}
+              </li>
+            ))}
 
 
-  {/* Logout at bottom */}
-  <li
-    className={`sidebar-list-item`}
-    onClick={handleLogout}
-    style={{ marginTop: "auto" }}
-  >
-    {getIcon("Logout")}
-    {sidebarOpen && <span style={{ marginLeft: "10px" }}>Logout</span>}
-  </li>
-</ul>
+            {/* Logout at bottom */}
+            <li
+              className={`sidebar-list-item`}
+              onClick={handleLogout}
+              style={{ marginTop: "auto" }}
+            >
+              {getIcon("Logout")}
+              {sidebarOpen && <span style={{ marginLeft: "10px" }}>Logout</span>}
+            </li>
+          </ul>
 
         </div>
 

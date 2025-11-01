@@ -1,7 +1,8 @@
+// client/src/Components/Leads/ViewLeads.js
 import React, { useEffect, useState } from "react";
-import DateFilter from "./datefilter"; // ✅ Make sure file name matches correctly
+import DateFilter from "./datefilter";
 
-const ViewLeads = ({ onRefreshParent }) => {
+const ViewLeads = ({ refreshTrigger }) => {
   const [leads, setLeads] = useState([]);
   const [filteredLeads, setFilteredLeads] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -10,28 +11,30 @@ const ViewLeads = ({ onRefreshParent }) => {
   const [page, setPage] = useState(1);
   const perPage = 8;
 
-  // ✅ Fetch data from backend
+  const base = process.env.REACT_APP_API_URL || "http://localhost:5000";
+
+  // ✅ Fetch all leads
   const fetchData = async () => {
     setLoading(true);
     try {
-      const base = process.env.REACT_APP_API_URL || "http://localhost:5000";
       const res = await fetch(`${base.replace(/\/$/, "")}/api/leads`);
-      if (!res.ok) throw new Error("Fetch failed");
+      if (!res.ok) throw new Error("Failed to fetch");
       const data = await res.json();
       setLeads(data);
-      setFilteredLeads(data); // show all initially
-    } catch (e) {
-      console.error(e);
+      setFilteredLeads(data);
+    } catch (err) {
+      console.error(err);
     } finally {
       setLoading(false);
     }
   };
 
+  // ✅ Initial + refresh trigger
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [refreshTrigger]);
 
-  // ✅ Global search
+  // ✅ Search filter
   useEffect(() => {
     const input = document.getElementById("global-search");
     const handler = (e) => setQuery(e.target.value);
@@ -39,7 +42,7 @@ const ViewLeads = ({ onRefreshParent }) => {
     return () => input && input.removeEventListener("input", handler);
   }, []);
 
-  // ✅ Status + Search filter
+  // ✅ Filter leads
   const visibleLeads = filteredLeads
     .filter((l) => JSON.stringify(l).toLowerCase().includes(query.toLowerCase()))
     .filter((l) => (filterStatus === "all" ? true : l.status === filterStatus));
@@ -48,7 +51,7 @@ const ViewLeads = ({ onRefreshParent }) => {
   const pageCount = Math.max(1, Math.ceil(visibleLeads.length / perPage));
   const pageData = visibleLeads.slice((page - 1) * perPage, page * perPage);
 
-  // ✅ Date filter handler
+  // ✅ Date filter
   const handleDateFilter = (start, end) => {
     if (!start || !end) {
       setFilteredLeads(leads);
@@ -64,7 +67,7 @@ const ViewLeads = ({ onRefreshParent }) => {
 
   return (
     <div>
-      {/* 🔹 Header Line Bar */}
+      {/* 🔹 Header Bar */}
       <div
         style={{
           display: "flex",
@@ -96,15 +99,12 @@ const ViewLeads = ({ onRefreshParent }) => {
             <option value="Lost">Lost</option>
           </select>
 
-          {/* Date Filter Component */}
+          {/* Date Filter */}
           <DateFilter onFilter={handleDateFilter} />
 
           {/* Refresh Button */}
           <button
-            onClick={() => {
-              fetchData();
-              if (onRefreshParent) onRefreshParent();
-            }}
+            onClick={fetchData}
             style={{
               backgroundColor: "#007bff",
               color: "white",
@@ -119,7 +119,7 @@ const ViewLeads = ({ onRefreshParent }) => {
         </div>
       </div>
 
-      {/* 🔹 Data Table */}
+      {/* 🔹 Leads Table */}
       <div style={{ overflowX: "auto" }}>
         <table className="data-table">
           <thead>
@@ -127,6 +127,7 @@ const ViewLeads = ({ onRefreshParent }) => {
               <th>#</th>
               <th>Title</th>
               <th>Contact</th>
+              <th>Email</th>
               <th>Source</th>
               <th>Status</th>
               <th>Created</th>
@@ -135,16 +136,19 @@ const ViewLeads = ({ onRefreshParent }) => {
           <tbody>
             {pageData.length === 0 && (
               <tr>
-                <td colSpan="6">No leads found.</td>
+                <td colSpan="7" style={{ textAlign: "center" }}>
+                  No leads found.
+                </td>
               </tr>
             )}
             {pageData.map((l, i) => (
               <tr key={l._id || i}>
                 <td>{(page - 1) * perPage + i + 1}</td>
-                <td>{l.title || l.name || "-"}</td>
-                <td>{l.contact || l.phone || l.email || "-"}</td>
+                <td>{l.name || "-"}</td>
+                <td>{l.contact || "-"}</td>
+                <td>{l.email || "-"}</td>
                 <td>{l.source || "-"}</td>
-                <td>{l.status || "-"}</td>
+                <td>{l.status || "New"}</td> {/* ✅ Default status */}
                 <td>
                   {l.createdAt
                     ? new Date(l.createdAt).toLocaleDateString()

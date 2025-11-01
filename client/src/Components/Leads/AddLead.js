@@ -1,3 +1,4 @@
+// client/src/Components/Leads/AddLead.js
 import React, { useState } from "react";
 
 const AddLead = ({ onLeadAdded }) => {
@@ -25,6 +26,7 @@ const AddLead = ({ onLeadAdded }) => {
       phone: formData.phone,
       address: formData.address,
       state: formData.state,
+      Source: formData.Source,
       followUps: [
         {
           date: formData.followUpDate,
@@ -53,6 +55,7 @@ const AddLead = ({ onLeadAdded }) => {
         phone: "",
         address: "",
         state: "",
+        Source: "",
         followUpDate: "",
         followUpTime: "",
         followUpRemark: "",
@@ -95,6 +98,16 @@ const AddLead = ({ onLeadAdded }) => {
           <div className="form-group">
             <label>State:</label>
             <input type="text" name="state" value={formData.state} onChange={handleChange} required />
+          </div>
+           <div className="form-group">
+            <label>Source:</label>
+            <select name="Source" value={formData.Source} onChange={handleChange}>
+              <option value="New">Select the Source Type</option>
+               <option value="New">Friend</option>
+              <option value="In Progress">Walk In</option>
+              <option value="Converted">Social media</option>
+              <option value="Lost">Other</option>
+            </select>
           </div>
 
           <div className="form-group">
