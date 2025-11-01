@@ -62,10 +62,17 @@ const AddQuotation = () => {
     e.preventDefault();
     try {
       const base = process.env.REACT_APP_API_URL || "http://localhost:5000";
+      // Format the first item for the server model
+      const firstItem = items[0];
       const payload = {
-        ...formData,
-        items,
-        totalAmount,
+        name: formData.customerName,
+        email: formData.email,
+        phone: formData.phone,
+        address: formData.address,
+        state: formData.state,
+        item: firstItem.itemName,
+        quantity: firstItem.qty,
+        amount: totalAmount,
       };
 
       const res = await fetch(`${base.replace(/\/$/, "")}/api/quotations`, {
@@ -74,9 +81,13 @@ const AddQuotation = () => {
         body: JSON.stringify(payload),
       });
 
-      if (!res.ok) throw new Error("Failed to add quotation");
+      const data = await res.json();
+      
+      if (!res.ok) {
+        throw new Error(data.error || data.message || "Failed to add quotation");
+      }
 
-      alert("Quotation added successfully!");
+      alert("✅ Quotation added successfully!");
       setFormData({
         customerName: "",
         email: "",
@@ -86,8 +97,8 @@ const AddQuotation = () => {
       });
       setItems([{ itemName: "", qty: 1, unit: "", price: 0, discount: 0, tax: 0, subtotal: 0 }]);
     } catch (err) {
-      console.error(err);
-      alert("Error adding quotation!");
+      console.error("Quotation error:", err);
+      alert(`❌ Error: ${err.message || "Failed to add quotation"}`);
     }
   };
 
