@@ -19,8 +19,8 @@ export default function FollowUpPage({ onCustomerAdded }) {
 
   const fetchEntries = async (module) => {
     try {
-  const base = process.env.REACT_APP_API_URL || 'http://localhost:5000';
-  const res = await fetch(`${base.replace(/\/$/, '')}/api/${module.toLowerCase()}`);
+      const base = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+      const res = await fetch(`${base.replace(/\/$/, '')}/api/${module.toLowerCase()}`);
       const data = await res.json();
       setEntries(data);
     } catch (err) {
@@ -41,8 +41,8 @@ export default function FollowUpPage({ onCustomerAdded }) {
     const followUpDateTime = new Date(`${followUpDate}T${followUpTime}`);
 
     try {
-  const base2 = process.env.REACT_APP_API_URL || 'http://localhost:5000';
-  await fetch(`${base2.replace(/\/$/, '')}/api/followups`, {
+      const base2 = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+      await fetch(`${base2.replace(/\/$/, '')}/api/followups`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -66,7 +66,7 @@ export default function FollowUpPage({ onCustomerAdded }) {
 
   return (
     <div className="followup-page p-5">
-      <h1 className="text-xl font-bold mb-4">Add Follow-Up</h1>
+      <h1 className="text-xl font-bold mb-4">Select Module to Add follow up</h1>
 
       {/* Module Dropdown */}
       <select
@@ -82,21 +82,33 @@ export default function FollowUpPage({ onCustomerAdded }) {
         ))}
       </select>
 
-      {/* Entries Table */}
-      {entries.length > 0 && (
-        <div className="followup-table-wrapper overflow-x-auto mt-4">
-          <table className="followup-table min-w-full border border-gray-300 rounded">
-            <thead className="bg-gray-200">
+      {/* Entries Table: always render */}
+      <div className="followup-table-wrapper overflow-x-auto mt-4">
+        <table className="followup-table min-w-full border border-gray-300 rounded">
+          <thead className="bg-gray-200">
+            <tr>
+              <th className="py-2 px-4 border-b text-left">#</th>
+              <th className="py-2 px-4 border-b text-left">Name / Title</th>
+              <th className="py-2 px-4 border-b text-left">Email</th>
+              <th className="py-2 px-4 border-b text-left">Phone</th>
+              <th className="py-2 px-4 border-b text-left">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {selectedModule === "" ? (
               <tr>
-                <th className="py-2 px-4 border-b text-left">#</th>
-                <th className="py-2 px-4 border-b text-left">Name / Title</th>
-                <th className="py-2 px-4 border-b text-left">Email</th>
-                <th className="py-2 px-4 border-b text-left">Phone</th>
-                <th className="py-2 px-4 border-b text-left">Action</th>
+                <td colSpan="5" className="text-center py-4 text-gray-500">
+                  Please select a module to view entries
+                </td>
               </tr>
-            </thead>
-            <tbody>
-              {entries.map((entry, idx) => (
+            ) : entries.length === 0 ? (
+              <tr>
+                <td colSpan="5" className="text-center py-4 text-gray-500">
+                  No entries found for {selectedModule}
+                </td>
+              </tr>
+            ) : (
+              entries.map((entry, idx) => (
                 <tr key={entry._id} className="hover:bg-gray-100">
                   <td className="py-2 px-4 border-b">{idx + 1}</td>
                   <td className="py-2 px-4 border-b">{entry.name || entry.title}</td>
@@ -111,11 +123,11 @@ export default function FollowUpPage({ onCustomerAdded }) {
                     </button>
                   </td>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      )}
+              ))
+            )}
+          </tbody>
+        </table>
+      </div>
 
       {/* Modal */}
       {selectedEntry && (
@@ -125,12 +137,7 @@ export default function FollowUpPage({ onCustomerAdded }) {
               Add Follow-Up for {selectedEntry.name || selectedEntry.title}
             </h2>
 
-            <textarea
-              value={followUpNote}
-              onChange={(e) => setFollowUpNote(e.target.value)}
-              className="border w-full p-2 rounded mb-2"
-              placeholder="Enter follow-up remark"
-            />
+
 
             <div className="flex gap-2 mb-4">
               <div className="flex flex-col w-1/2">
@@ -150,8 +157,22 @@ export default function FollowUpPage({ onCustomerAdded }) {
                   onChange={(e) => setFollowUpTime(e.target.value)}
                   className="border p-2 rounded"
                 />
+
+              </div>
+
+            </div>
+            <div className="flex gap-2 mb-4">
+              <div className="flex flex-col w-1/2">
+                <label className="text-sm font-semibold mb-5">Remark</label>
+                <textarea
+                  value={followUpNote}
+                  onChange={(e) => setFollowUpNote(e.target.value)}
+                  className="border w-full p-2 rounded mb-2"
+                  placeholder="Enter follow-up remark"
+                />
               </div>
             </div>
+
 
             <div className="flex justify-end gap-2">
               <button

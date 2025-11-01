@@ -30,9 +30,10 @@
 /* ✅ Row layout for multi-column structure */
 /* 🌟 Main Form Container */
 .add-form {
-  max-width: 1100px;
-  margin: 30px auto;
-  padding: 30px;
+  max-width: 1200px;
+  margin: 1px auto;
+  margin-left: 10px;
+  padding: 25px;
   background: #fff;
   border-radius: 10px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
@@ -59,7 +60,7 @@
 .form-row {
   display: flex;
   flex-wrap: wrap;
-  gap: 50px;
+  gap:25px;
 }
 
 /* 🌟 Each input group (label + field) */
@@ -85,7 +86,7 @@
 .form-group select,
 .form-group textarea {
   width: 100%;
-  padding: 10px;
+  padding: 9px;
   border: 1px solid #ddd;
   border-radius: 6px;
   font-size: 1rem;
