@@ -10,6 +10,7 @@
   overflow-y: auto;
   margin-left: 220px; /* Default sidebar width */
   transition: margin-left 0.3s ease;
+  margin-top: 55px;
 }
 
 /* Adjust margin when sidebar is collapsed */
