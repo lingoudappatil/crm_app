@@ -4,6 +4,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 import path from "path";
 import { fileURLToPath } from "url";
+import PDFDocument from "pdfkit";
 
 // Models
 import User from "./models/User.js";
@@ -12,14 +13,13 @@ import Customer from "./models/Customer.js";
 import Quotation from "./models/Quotation.js";
 import Order from "./models/Order.js";
 import followUpRoutes from "./routes/followUps.js";
+import quotationRoutes from "./routes/quotationRoutes.js";
 
 // Config
 import connectDB from "./config/db.js";
 
 // Initialize app
 const app = express();
-
-// Load environment variables
 dotenv.config();
 
 // Connect MongoDB
@@ -34,6 +34,7 @@ app.use(cors());
 
 // Routes
 app.use("/api/followups", followUpRoutes);
+app.use("/api/quotations", quotationRoutes);
 
 // =================== USER ROUTES ===================
 
@@ -78,13 +79,12 @@ app.post("/api/login", async (req, res) => {
 // =================== LEAD ROUTES ===================
 app.post("/api/leads", async (req, res) => {
   try {
-    console.log("Received lead data:", req.body);
     const newLead = new Lead(req.body);
     await newLead.save();
     res.status(201).json({ message: "Lead added successfully!", lead: newLead });
   } catch (error) {
     console.error("Error saving lead:", error);
-    res.status(500).json({ error: "Failed to add lead", details: error.message });
+    res.status(500).json({ error: "Failed to add lead" });
   }
 });
 
@@ -106,7 +106,7 @@ app.post("/api/customers", async (req, res) => {
     res.status(201).json({ message: "Customer added successfully!", customer: newCustomer });
   } catch (error) {
     console.error("Error saving customer:", error);
-    res.status(500).json({ error: "Failed to add customer", details: error.message });
+    res.status(500).json({ error: "Failed to add customer" });
   }
 });
 
@@ -128,10 +128,11 @@ app.post("/api/quotations", async (req, res) => {
     res.status(201).json({ message: "Quotation added successfully!", quotation: newQuotation });
   } catch (error) {
     console.error("Error saving quotation:", error);
-    res.status(500).json({ error: "Failed to add quotation", details: error.message });
+    res.status(500).json({ error: "Failed to add quotation" });
   }
 });
 
+// Get all quotations
 app.get("/api/quotations", async (req, res) => {
   try {
     const quotations = await Quotation.find().sort({ createdAt: -1 });
@@ -142,16 +143,77 @@ app.get("/api/quotations", async (req, res) => {
   }
 });
 
+// Update quotation
+app.put("/api/quotations/:id", async (req, res) => {
+  try {
+    const quotation = await Quotation.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      { new: true, runValidators: true }
+    );
+
+    if (!quotation) {
+      return res.status(404).json({ error: "Quotation not found" });
+    }
+
+    res.json({ message: "Quotation updated successfully", quotation });
+  } catch (error) {
+    console.error("Error updating quotation:", error);
+    res.status(500).json({ error: "Failed to update quotation" });
+  }
+});
+
+// ✅ Export Quotation as PDF
+app.get("/api/quotations/:id/export", async (req, res) => {
+  try {
+    const quotation = await Quotation.findById(req.params.id);
+    if (!quotation) return res.status(404).json({ error: "Quotation not found" });
+
+    const doc = new PDFDocument();
+    res.setHeader("Content-Type", "application/pdf");
+    res.setHeader(
+      "Content-Disposition",
+      `attachment; filename=quotation-${quotation._id}.pdf`
+    );
+    doc.pipe(res);
+
+    // Add content
+    doc.fontSize(20).text("Quotation", { align: "center" }).moveDown();
+    doc.fontSize(12).text(`Quotation No: ${quotation._id}`);
+    doc.text(`Date: ${new Date(quotation.createdAt).toLocaleDateString()}`).moveDown();
+
+    doc.fontSize(14).text("Customer Details");
+    doc.fontSize(12)
+      .text(`Name: ${quotation.name}`)
+      .text(`Email: ${quotation.email}`)
+      .text(`Phone: ${quotation.phone}`)
+      .text(`Address: ${quotation.address}`)
+      .moveDown();
+
+    doc.fontSize(14).text("Item Details");
+    doc.fontSize(12)
+      .text(`Item: ${quotation.item}`)
+      .text(`Quantity: ${quotation.quantity}`)
+      .text(`Amount: ₹${quotation.amount}`)
+      .moveDown();
+
+    doc.fontSize(14).text(`Total: ₹${quotation.amount}`, { align: "right" });
+    doc.end();
+  } catch (error) {
+    console.error("Error generating PDF:", error);
+    res.status(500).json({ error: "Failed to generate PDF" });
+  }
+});
+
 // =================== ORDER ROUTES ===================
 app.post("/api/orders", async (req, res) => {
   try {
-    console.log("Received order data:", req.body);
     const newOrder = new Order(req.body);
     await newOrder.save();
     res.status(201).json({ message: "Order added successfully!", order: newOrder });
   } catch (error) {
     console.error("Error saving order:", error);
-    res.status(500).json({ error: "Failed to add order", details: error.message });
+    res.status(500).json({ error: "Failed to add order" });
   }
 });
 
@@ -168,11 +230,7 @@ app.get("/api/orders", async (req, res) => {
 // =================== FRONTEND DEPLOYMENT ===================
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-
-// Serve static files from React app
 app.use(express.static(path.join(__dirname, "./client/build")));
-
-// All other GET requests not handled before will return React’s index.html
 app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, "./client/build/index.html"));
 });

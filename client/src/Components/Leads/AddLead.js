@@ -103,7 +103,7 @@ const AddLead = ({ onLeadAdded }) => {
             <label>Source:</label>
             <select name="Source" value={formData.Source} onChange={handleChange}>
               <option value="New">Select the Source Type</option>
-               <option value="New">Friend</option>
+               <option value="in ">Friend</option>
               <option value="In Progress">Walk In</option>
               <option value="Converted">Social media</option>
               <option value="Lost">Other</option>
