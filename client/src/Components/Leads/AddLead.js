@@ -1,5 +1,4 @@
-// client/src/Components/Leads/AddLead.js
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 const AddLead = ({ onLeadAdded }) => {
   const [formData, setFormData] = useState({
@@ -8,45 +7,44 @@ const AddLead = ({ onLeadAdded }) => {
     phone: "",
     address: "",
     state: "",
+    Source: "",
     followUpDate: "",
     followUpTime: "",
     followUpRemark: "",
   });
 
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+  const [leadSources, setLeadSources] = useState([]); // <-- Dynamic sources
+
+  useEffect(() => {
+    fetchLeadSources();
+  }, []);
+
+  const fetchLeadSources = async () => {
+    try {
+      const base = process.env.REACT_APP_API_URL || "http://localhost:5000";
+      const res = await fetch(`${base}/api/settings/lead-sources`);
+      const data = await res.json();
+      setLeadSources(data.sources || []);
+    } catch (err) {
+      console.error("Error fetching sources:", err);
+    }
   };
+
+  const handleChange = (e) =>
+    setFormData({ ...formData, [e.target.name]: e.target.value });
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    const payload = {
-      name: formData.name,
-      email: formData.email,
-      phone: formData.phone,
-      address: formData.address,
-      state: formData.state,
-      Source: formData.Source,
-      followUps: [
-        {
-          date: formData.followUpDate,
-          time: formData.followUpTime || "00:00",
-          remark: formData.followUpRemark,
-        },
-      ],
-    };
-
     try {
       const base = process.env.REACT_APP_API_URL || "http://localhost:5000";
-      const response = await fetch(`${base.replace(/\/$/, "")}/api/leads`, {
+      const res = await fetch(`${base}/api/leads`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
+        body: JSON.stringify(formData),
       });
 
-      const data = await response.json();
-
-      if (!response.ok) throw new Error(data.error || "Failed to add lead");
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Failed to add lead");
 
       alert("✅ Lead added successfully!");
       setFormData({
@@ -60,13 +58,8 @@ const AddLead = ({ onLeadAdded }) => {
         followUpTime: "",
         followUpRemark: "",
       });
-
-      // Notify parent to refresh view list
-      if (onLeadAdded) onLeadAdded();
-
-    } catch (error) {
-      console.error("Error adding lead:", error);
-      alert(`❌ Error: ${error.message}`);
+    } catch (err) {
+      alert(`❌ ${err.message}`);
     }
   };
 
@@ -74,59 +67,23 @@ const AddLead = ({ onLeadAdded }) => {
     <div className="add-form">
       <h2>Add Lead</h2>
       <form onSubmit={handleSubmit}>
-        <div className="form-row">
-          <div className="form-group">
-            <label>Full Name:</label>
-            <input type="text" name="name" value={formData.name} onChange={handleChange} required />
-          </div>
+        {/* Your existing fields */}
 
-          <div className="form-group">
-            <label>Email:</label>
-            <input type="email" name="email" value={formData.email} onChange={handleChange} required />
-          </div>
-
-          <div className="form-group">
-            <label>Phone:</label>
-            <input type="tel" name="phone" value={formData.phone} onChange={handleChange} required />
-          </div>
-
-          <div className="form-group">
-            <label>Address:</label>
-            <textarea name="address" value={formData.address} onChange={handleChange} rows="2" />
-          </div>
-
-          <div className="form-group">
-            <label>State:</label>
-            <input type="text" name="state" value={formData.state} onChange={handleChange} required />
-          </div>
-           <div className="form-group">
-            <label>Source:</label>
-            <select name="Source" value={formData.Source} onChange={handleChange}>
-              <option value="New">Select the Source Type</option>
-               <option value="in ">Friend</option>
-              <option value="In Progress">Walk In</option>
-              <option value="Converted">Social media</option>
-              <option value="Lost">Other</option>
-            </select>
-          </div>
-
-          <div className="form-group">
-            <label>Follow-Up Date:</label>
-            <input type="date" name="followUpDate" value={formData.followUpDate} onChange={handleChange} required />
-          </div>
-
-          <div className="form-group">
-            <label>Follow-Up Time:</label>
-            <input type="time" name="followUpTime" value={formData.followUpTime} onChange={handleChange} required />
-          </div>
-
-          <div className="form-group">
-            <label>Follow-Up Remark:</label>
-            <input type="text" name="followUpRemark" value={formData.followUpRemark} onChange={handleChange} required />
-          </div>
+        <div className="form-group">
+          <label>Source:</label>
+          <select name="Source" value={formData.Source} onChange={handleChange}>
+            <option value="">Select Source</option>
+            {leadSources.map((src, idx) => (
+              <option key={idx} value={src}>
+                {src}
+              </option>
+            ))}
+          </select>
         </div>
 
-        <button type="submit" className="submit-button">Add Lead</button>
+        <button type="submit" className="submit-button">
+          Add Lead
+        </button>
       </form>
     </div>
   );

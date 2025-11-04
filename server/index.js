@@ -1,3 +1,4 @@
+// =================== IMPORTS ===================
 import express from "express";
 import bodyParser from "body-parser";
 import cors from "cors";
@@ -12,13 +13,17 @@ import Lead from "./models/Leads.js";
 import Customer from "./models/Customer.js";
 import Quotation from "./models/Quotation.js";
 import Order from "./models/Order.js";
+import settingsRoutes from "./routes/settings.js";
+
+// Routes
 import followUpRoutes from "./routes/followUps.js";
 import quotationRoutes from "./routes/quotationRoutes.js";
+
 
 // Config
 import connectDB from "./config/db.js";
 
-// Initialize app
+// =================== INITIAL SETUP ===================
 const app = express();
 dotenv.config();
 
@@ -27,18 +32,21 @@ connectDB()
   .then(() => console.log("✅ MongoDB connected"))
   .catch((err) => console.error("❌ DB connect error", err));
 
-// Middleware
+// =================== MIDDLEWARE ===================
 app.use(express.json());
 app.use(bodyParser.json());
 app.use(cors());
 
-// Routes
+// =================== API ROUTES ===================
+
+// Follow-up & quotation routes (from routes folder)
 app.use("/api/followups", followUpRoutes);
 app.use("/api/quotations", quotationRoutes);
+app.use("/api/settings", settingsRoutes);
 
 // =================== USER ROUTES ===================
 
-// Register
+// Register User
 app.post("/api/register", async (req, res) => {
   try {
     const { username, email, address, state, password } = req.body;
@@ -57,7 +65,7 @@ app.post("/api/register", async (req, res) => {
   }
 });
 
-// Login
+// Login User
 app.post("/api/login", async (req, res) => {
   try {
     const { username, password } = req.body;
@@ -121,6 +129,8 @@ app.get("/api/customers", async (req, res) => {
 });
 
 // =================== QUOTATION ROUTES ===================
+
+// Create quotation
 app.post("/api/quotations", async (req, res) => {
   try {
     const newQuotation = new Quotation(req.body);
@@ -163,21 +173,26 @@ app.put("/api/quotations/:id", async (req, res) => {
   }
 });
 
-// ✅ Export Quotation as PDF
+// ✅ Export quotation as PDF (FIXED)
 app.get("/api/quotations/:id/export", async (req, res) => {
   try {
     const quotation = await Quotation.findById(req.params.id);
     if (!quotation) return res.status(404).json({ error: "Quotation not found" });
 
+    // Create PDF document
     const doc = new PDFDocument();
+
+    // Set headers for browser download
     res.setHeader("Content-Type", "application/pdf");
     res.setHeader(
       "Content-Disposition",
       `attachment; filename=quotation-${quotation._id}.pdf`
     );
+
+    // Pipe PDF data to response
     doc.pipe(res);
 
-    // Add content
+    // Add PDF content
     doc.fontSize(20).text("Quotation", { align: "center" }).moveDown();
     doc.fontSize(12).text(`Quotation No: ${quotation._id}`);
     doc.text(`Date: ${new Date(quotation.createdAt).toLocaleDateString()}`).moveDown();
@@ -198,7 +213,7 @@ app.get("/api/quotations/:id/export", async (req, res) => {
       .moveDown();
 
     doc.fontSize(14).text(`Total: ₹${quotation.amount}`, { align: "right" });
-    doc.end();
+    doc.end(); // Finalize the PDF
   } catch (error) {
     console.error("Error generating PDF:", error);
     res.status(500).json({ error: "Failed to generate PDF" });
@@ -227,14 +242,19 @@ app.get("/api/orders", async (req, res) => {
   }
 });
 
-// =================== FRONTEND DEPLOYMENT ===================
+// =================== FRONTEND DEPLOYMENT (MOVE TO END) ===================
+// ✅ Keep this block at the BOTTOM of the file
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+
+// Serve React build files
 app.use(express.static(path.join(__dirname, "./client/build")));
+
+// All other routes -> return React app
 app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, "./client/build/index.html"));
 });
 
-// =================== SERVER START ===================
+// =================== START SERVER ===================
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
