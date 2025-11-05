@@ -13,27 +13,37 @@ import ViewFollowUps from "./Components/FollowUps/ViewFollowUp";
 import Todo from "./Components/TODO/AddTodo";
 import ViewTodo from "./Components/TODO/ViewTodo";
 import FollowUpPage from "./Components/FollowUps/AddFollowUp";
+import SettingsPage from "./Components/Settings/SettingsPage"; // ✅ Correct import
 
-import { BarChart, Bar, PieChart, Pie, XAxis, YAxis, Tooltip, Legend, CartesianGrid, ResponsiveContainer, Cell } from "recharts";
+import {
+  BarChart,
+  Bar,
+  PieChart,
+  Pie,
+  XAxis,
+  YAxis,
+  Tooltip,
+  Legend,
+  CartesianGrid,
+  ResponsiveContainer,
+  Cell,
+} from "recharts";
 
 const HomePage = ({ setCurrentPage, loggedInUser }) => {
   const [darkMode, setDarkMode] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [currentTime, setCurrentTime] = useState(new Date());
-
   const [customerCount, setCustomerCount] = useState(0);
   const [leadsCount, setLeadsCount] = useState(0);
   const [quotationsCount, setQuotationsCount] = useState(0);
   const [ordersCount, setOrdersCount] = useState(0);
-
-  const modules = ["Lead", "Quotation", "Order", "Customer", "Follow-Up", "ToDo",];
-  const [expandedModule, setExpandedModule] = useState(null);
   const [activeModule, setActiveModule] = useState("Dashboard");
+  const [expandedModule, setExpandedModule] = useState(null);
   const [activeSub, setActiveSub] = useState(null);
 
-  // base URL for API calls: prefer explicit REACT_APP_API_URL, otherwise
-  // use localhost in development, or relative paths in production
-  const defaultBase = process.env.NODE_ENV === 'development' ? 'http://localhost:5000' : '';
+  const modules = ["Lead", "Quotation", "Order", "Customer", "Follow-Up", "ToDo"];
+
+  const defaultBase = process.env.NODE_ENV === "development" ? "http://localhost:5000" : "";
   const baseUrl = process.env.REACT_APP_API_URL || defaultBase;
 
   useEffect(() => {
@@ -41,53 +51,42 @@ const HomePage = ({ setCurrentPage, loggedInUser }) => {
     return () => clearInterval(timer);
   }, []);
 
+  // 📊 Fetch data for dashboard
   const fetchCustomerCount = async () => {
     try {
-      const url = baseUrl ? `${baseUrl.replace(/\/$/, '')}/api/customers` : '/api/customers';
-      const res = await fetch(url);
-      if (res.ok) {
-        const data = await res.json();
-        setCustomerCount(Array.isArray(data) ? data.length : (data.count || 0));
-      } else {
-        console.error('Failed to fetch customers', res.status, res.statusText);
-      }
-    } catch (err) { console.error(err); }
+      const res = await fetch(`${baseUrl.replace(/\/$/, "")}/api/customers`);
+      const data = await res.json();
+      setCustomerCount(Array.isArray(data) ? data.length : 0);
+    } catch (err) {
+      console.error(err);
+    }
   };
   const fetchLeadsCount = async () => {
     try {
-      const url = baseUrl ? `${baseUrl.replace(/\/$/, '')}/api/leads` : '/api/leads';
-      const res = await fetch(url);
-      if (res.ok) {
-        const data = await res.json();
-        setLeadsCount(Array.isArray(data) ? data.length : (data.count || 0));
-      } else {
-        console.error('Failed to fetch leads', res.status, res.statusText);
-      }
-    } catch (err) { console.error(err); }
+      const res = await fetch(`${baseUrl.replace(/\/$/, "")}/api/leads`);
+      const data = await res.json();
+      setLeadsCount(Array.isArray(data) ? data.length : 0);
+    } catch (err) {
+      console.error(err);
+    }
   };
   const fetchQuotationsCount = async () => {
     try {
-      const url = baseUrl ? `${baseUrl.replace(/\/$/, '')}/api/quotations` : '/api/quotations';
-      const res = await fetch(url);
-      if (res.ok) {
-        const data = await res.json();
-        setQuotationsCount(Array.isArray(data) ? data.length : (data.count || 0));
-      } else {
-        console.error('Failed to fetch quotations', res.status, res.statusText);
-      }
-    } catch (err) { console.error(err); }
+      const res = await fetch(`${baseUrl.replace(/\/$/, "")}/api/quotations`);
+      const data = await res.json();
+      setQuotationsCount(Array.isArray(data) ? data.length : 0);
+    } catch (err) {
+      console.error(err);
+    }
   };
   const fetchOrdersCount = async () => {
     try {
-      const url = baseUrl ? `${baseUrl.replace(/\/$/, '')}/api/orders` : '/api/orders';
-      const res = await fetch(url);
-      if (res.ok) {
-        const data = await res.json();
-        setOrdersCount(Array.isArray(data) ? data.length : (data.count || 0));
-      } else {
-        console.error('Failed to fetch orders', res.status, res.statusText);
-      }
-    } catch (err) { console.error(err); }
+      const res = await fetch(`${baseUrl.replace(/\/$/, "")}/api/orders`);
+      const data = await res.json();
+      setOrdersCount(Array.isArray(data) ? data.length : 0);
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   useEffect(() => {
@@ -99,10 +98,12 @@ const HomePage = ({ setCurrentPage, loggedInUser }) => {
     }
   }, [activeModule]);
 
+  // 🧭 Sidebar navigation logic
   const toggleModule = (mod) => {
-    // Only toggle the expanded state, don't change the active module
     setExpandedModule(expandedModule === mod ? null : mod);
-  }; const handleSelectSub = (mod, sub) => {
+  };
+
+  const handleSelectSub = (mod, sub) => {
     setActiveModule(mod);
     setActiveSub(sub);
   };
@@ -111,6 +112,12 @@ const HomePage = ({ setCurrentPage, loggedInUser }) => {
     if (window.confirm("Are you sure you want to log out?")) {
       setCurrentPage("login");
     }
+  };
+
+  const handleSettings = () => {
+    setActiveModule("Settings");
+    setActiveSub(null);
+    setExpandedModule(null);
   };
 
   const chartData = [
@@ -129,17 +136,22 @@ const HomePage = ({ setCurrentPage, loggedInUser }) => {
       Customer: "👥",
       "Follow-Up": "🔔",
       ToDo: "📝",
+      Settings: "⚙️",
       Logout: "🚪",
     };
     return <span>{icons[item] || "🔹"}</span>;
   };
 
+  // 💡 Render main content area based on active module
   const renderContent = () => {
     if (activeModule === "Dashboard") {
       return (
         <div className="dashboard-content">
-          <p>📊 Welcome to Lingouda's Dashboard! Overview of activities & sales operations.</p>
+          <p>
+            📊 Welcome to Lingouda's Dashboard! Overview of activities & sales operations.
+          </p>
 
+          {/* Stats cards */}
           <div className="stats-grid">
             <div className="stat-card customers">
               <div className="stat-content">
@@ -148,6 +160,7 @@ const HomePage = ({ setCurrentPage, loggedInUser }) => {
               </div>
               <div className="stat-icon">👥</div>
             </div>
+
             <div className="stat-card leads">
               <div className="stat-content">
                 <div className="stat-label">Leads</div>
@@ -155,6 +168,7 @@ const HomePage = ({ setCurrentPage, loggedInUser }) => {
               </div>
               <div className="stat-icon">📈</div>
             </div>
+
             <div className="stat-card quotations">
               <div className="stat-content">
                 <div className="stat-label">Quotations</div>
@@ -162,6 +176,7 @@ const HomePage = ({ setCurrentPage, loggedInUser }) => {
               </div>
               <div className="stat-icon">📃</div>
             </div>
+
             <div className="stat-card orders">
               <div className="stat-content">
                 <div className="stat-label">Orders</div>
@@ -171,8 +186,8 @@ const HomePage = ({ setCurrentPage, loggedInUser }) => {
             </div>
           </div>
 
+          {/* Charts */}
           <div className="charts-container">
-            {/* Bar Chart */}
             <div className="chart-wrapper">
               <h3>Activity Overview</h3>
               <ResponsiveContainer width="100%" height={300}>
@@ -187,7 +202,6 @@ const HomePage = ({ setCurrentPage, loggedInUser }) => {
               </ResponsiveContainer>
             </div>
 
-            {/* Pie Chart */}
             <div className="chart-wrapper">
               <h3>Distribution</h3>
               <ResponsiveContainer width="100%" height={300}>
@@ -203,7 +217,10 @@ const HomePage = ({ setCurrentPage, loggedInUser }) => {
                     label
                   >
                     {chartData.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={['#8884d8', '#82ca9d', '#ffc658', '#ff7300'][index % 4]} />
+                      <Cell
+                        key={`cell-${index}`}
+                        fill={["#8884d8", "#82ca9d", "#ffc658", "#ff7300"][index % 4]}
+                      />
                     ))}
                   </Pie>
                   <Tooltip />
@@ -220,33 +237,33 @@ const HomePage = ({ setCurrentPage, loggedInUser }) => {
       case "Lead":
         if (activeSub === "Add") return <Lead onAdded={fetchLeadsCount} />;
         if (activeSub === "View") return <ViewLeads onRefreshParent={fetchLeadsCount} />;
-        return null;
-
+        break;
       case "Quotation":
         if (activeSub === "Add") return <Quotation />;
-        if (activeSub === "View") return <ViewQuotations onRefreshParent={fetchQuotationsCount} />;
-        return null;
-
+        if (activeSub === "View")
+          return <ViewQuotations onRefreshParent={fetchQuotationsCount} />;
+        break;
       case "Order":
         if (activeSub === "Add") return <Order />;
-        if (activeSub === "View") return <ViewOrders onRefreshParent={fetchOrdersCount} />;
-        return null;
-
+        if (activeSub === "View")
+          return <ViewOrders onRefreshParent={fetchOrdersCount} />;
+        break;
       case "Customer":
-        if (activeSub === "Add") return <AddCustomerForm onCustomerAdded={fetchCustomerCount} />;
-        if (activeSub === "View") return <ViewCustomers onRefreshParent={fetchCustomerCount} />;
-        return null;
-
+        if (activeSub === "Add")
+          return <AddCustomerForm onCustomerAdded={fetchCustomerCount} />;
+        if (activeSub === "View")
+          return <ViewCustomers onRefreshParent={fetchCustomerCount} />;
+        break;
       case "Follow-Up":
-        if (activeSub === "Add") return <FollowUpPage onCustomerAdded={fetchCustomerCount} />;
-        if (activeSub === "View") return <ViewFollowUps onRefreshParent={fetchCustomerCount} />;
-        return null;
-
+        if (activeSub === "Add") return <FollowUpPage />;
+        if (activeSub === "View") return <ViewFollowUps />;
+        break;
       case "ToDo":
-        if (activeSub === "Add") return <Todo onCustomerAdded={fetchCustomerCount} />;
-        if (activeSub === "View") return <ViewTodo onRefreshParent={fetchCustomerCount} />;
-        return null;
-
+        if (activeSub === "Add") return <Todo />;
+        if (activeSub === "View") return <ViewTodo />;
+        break;
+      case "Settings":
+        return <SettingsPage />; // ✅ Render settings page here
       default:
         return <div>Welcome — choose a module from the left.</div>;
     }
@@ -254,6 +271,7 @@ const HomePage = ({ setCurrentPage, loggedInUser }) => {
 
   return (
     <div className={`container ${darkMode ? "dark" : "light"}`}>
+      {/* Top Bar */}
       <div className={`top-bar ${darkMode ? "dark" : "light"}`}>
         <button className="sidebar-toggle" onClick={() => setSidebarOpen(!sidebarOpen)}>
           {sidebarOpen ? "⬅️" : "➡️"}
@@ -262,51 +280,75 @@ const HomePage = ({ setCurrentPage, loggedInUser }) => {
         <div className="search-container">
           <input type="text" placeholder="Search..." className="search-bar" />
         </div>
-        <span style={{ marginLeft: "auto", color: "white" }}>{currentTime.toLocaleTimeString()}</span>
+        <span style={{ marginLeft: "auto", color: "white" }}>
+          {currentTime.toLocaleTimeString()}
+        </span>
         <button className="dark-mode-button" onClick={() => setDarkMode(!darkMode)}>
           {darkMode ? "🌞 Light Mode" : "🌙 Dark Mode"}
         </button>
         <span className="notification-bell">🔔</span>
       </div>
 
+      {/* Content Area */}
       <div className="content-wrapper">
+        {/* Sidebar */}
         <div className={`sidebar ${sidebarOpen ? "expanded" : "collapsed"}`}>
           <h2 className="logo">{sidebarOpen ? "My Sale App" : "🔷"}</h2>
           <ul className="sidebar-list">
             {/* Dashboard */}
             <li
-              className={`sidebar-list-item ${activeModule === "Dashboard" ? "active" : ""}`}
-              onClick={() => { setActiveModule("Dashboard"); setActiveSub(null); setExpandedModule(null); }}
+              className={`sidebar-list-item ${
+                activeModule === "Dashboard" ? "active" : ""
+              }`}
+              onClick={() => {
+                setActiveModule("Dashboard");
+                setActiveSub(null);
+                setExpandedModule(null);
+              }}
             >
               {getIcon("Dashboard")}
               {sidebarOpen && <span style={{ marginLeft: "10px" }}>Dashboard</span>}
             </li>
 
-            {/* Modules */}
+            {/* Main Modules */}
             {modules.map((mod) => (
-              <li key={mod} className={`module-group`}>
+              <li key={mod} className="module-group">
                 <div
-                  className={`sidebar-list-item module-item ${activeModule === mod && !activeSub ? "active" : ""}`}
+                  className={`sidebar-list-item module-item ${
+                    activeModule === mod && !activeSub ? "active" : ""
+                  }`}
                   onClick={() => toggleModule(mod)}
-                  style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                  }}
                 >
                   <div style={{ display: "flex", alignItems: "center" }}>
                     {getIcon(mod)}
                     {sidebarOpen && <span style={{ marginLeft: "10px" }}>{mod}</span>}
                   </div>
-                  {sidebarOpen && <span style={{ marginRight: 8 }}>{expandedModule === mod ? "▾" : "▸"}</span>}
+                  {sidebarOpen && (
+                    <span style={{ marginRight: 8 }}>
+                      {expandedModule === mod ? "▾" : "▸"}
+                    </span>
+                  )}
                 </div>
 
                 {expandedModule === mod && (
                   <ul className="submenu">
                     <li
-                      className={`sidebar-subitem ${activeModule === mod && activeSub === "Add" ? "active" : ""}`}
+                      className={`sidebar-subitem ${
+                        activeModule === mod && activeSub === "Add" ? "active" : ""
+                      }`}
                       onClick={() => handleSelectSub(mod, "Add")}
                     >
                       ➕ {sidebarOpen && <span style={{ marginLeft: 8 }}>Add {mod}</span>}
                     </li>
                     <li
-                      className={`sidebar-subitem ${activeModule === mod && activeSub === "View" ? "active" : ""}`}
+                      className={`sidebar-subitem ${
+                        activeModule === mod && activeSub === "View" ? "active" : ""
+                      }`}
                       onClick={() => handleSelectSub(mod, "View")}
                     >
                       🔎 {sidebarOpen && <span style={{ marginLeft: 8 }}>View {mod}s</span>}
@@ -316,34 +358,39 @@ const HomePage = ({ setCurrentPage, loggedInUser }) => {
               </li>
             ))}
 
-
-            {/* Logout at bottom */}
+            {/* ✅ Settings Option */}
             <li
-              className={`sidebar-list-item`}
-              onClick={handleLogout}
-              style={{ marginTop: "auto" }}
+              className={`sidebar-list-item ${activeModule === "Settings" ? "active" : ""}`}
+              onClick={handleSettings}
             >
+              {getIcon("Settings")}
+              {sidebarOpen && <span style={{ marginLeft: "10px" }}>Settings</span>}
+            </li>
+
+            {/* Logout */}
+            <li className="sidebar-list-item" onClick={handleLogout}>
               {getIcon("Logout")}
               {sidebarOpen && <span style={{ marginLeft: "10px" }}>Logout</span>}
             </li>
           </ul>
-
         </div>
 
+        {/* Main Content */}
         <div className="main-content">
-          <h1>{activeModule}{activeSub ? ` — ${activeSub}` : ""}</h1>
+          <h1>
+            {activeModule}
+            {activeSub ? ` — ${activeSub}` : ""}
+          </h1>
 
           {activeModule === "Dashboard" && (
             <div className="marquee-wrapper">
               <marquee behavior="scroll" direction="left" className="marquee">
-                📢 Welcome to Sales's Dashboard! Stay updated with the latest information here.
+                📢 Welcome to Sales Dashboard! Stay updated with the latest info.
               </marquee>
             </div>
           )}
 
-          <div className="page-content">
-            {renderContent()}
-          </div>
+          <div className="page-content">{renderContent()}</div>
         </div>
       </div>
     </div>

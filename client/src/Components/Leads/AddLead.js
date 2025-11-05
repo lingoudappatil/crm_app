@@ -77,7 +77,59 @@ const AddLead = ({ onLeadAdded }) => {
       <h2>Add Lead</h2>
       <form onSubmit={handleSubmit}>
         <div className="form-row">
-          {/* Other input fields remain same */}
+          <div className="form-group">
+            <label>Name:</label>
+            <input
+              type="text"
+              name="name"
+              value={formData.name}
+              onChange={handleChange}
+              required
+            />
+          </div>
+
+          <div className="form-group">
+            <label>Email:</label>
+            <input
+              type="email"
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
+              required
+            />
+          </div>
+
+          <div className="form-group">
+            <label>Phone:</label>
+            <input
+              type="tel"
+              name="phone"
+              value={formData.phone}
+              onChange={handleChange}
+              required
+            />
+          </div>
+
+          <div className="form-group">
+            <label>Address:</label>
+            <textarea
+              name="address"
+              value={formData.address}
+              onChange={handleChange}
+              required
+            />
+          </div>
+
+          <div className="form-group">
+            <label>State:</label>
+            <input
+              type="text"
+              name="state"
+              value={formData.state}
+              onChange={handleChange}
+              required
+            />
+          </div>
 
           <div className="form-group">
             <label>Source:</label>
@@ -85,6 +137,7 @@ const AddLead = ({ onLeadAdded }) => {
               name="Source"
               value={formData.Source}
               onChange={handleChange}
+              required
             >
               <option value="">Select Source Type</option>
               {leadSources.map((src, i) => (
