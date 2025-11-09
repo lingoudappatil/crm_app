@@ -3,13 +3,13 @@ import React, { useState } from 'react';
 import LoginPage from './LoginPage';
 import RegisterPage from './RegisterPage';
 import HomePage from './HomePage';
-import { SettingsProvider } from './context/SettingsContext';
-import SettingsPage from "./Components/Settings/SettingsPage";
+import { SettingsProvider } from "./context/SettingsContext";
 
 function App() {
   const [currentPage, setCurrentPage] = useState("login");
 
   return (
+    // ✅ Wrap everything inside SettingsProvider
     <SettingsProvider>
       <div>
         {currentPage === "login" && (
@@ -29,9 +29,6 @@ function App() {
         {currentPage === "home" && (
           <HomePage setCurrentPage={setCurrentPage} />
         )}
-
-        {/* ✅ Show settings page at bottom or create separate navigation */}
-       
       </div>
     </SettingsProvider>
   );

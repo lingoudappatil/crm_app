@@ -1,26 +1,44 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 import Counter from "./Counter.js";
 
+// Quotation Schema (supports dynamic items & customFields)
 const quotationSchema = new mongoose.Schema({
-  // numeric, auto-incrementing ID (keeps default _id ObjectId as well)
   quotationId: { type: Number, unique: true, index: true },
-  name: { type: String, required: true },
-  email: { type: String, required: true },
-  phone: { type: String, required: true },
-  item: { type: String, required: true },
-  quantity: { type: Number, required: true },
-  amount: { type: Number, required: true },
-  address: { type: String, required: true },
-  state: { type: String, required: true },
-  createdAt: { type: Date, default: Date.now }
+
+  // Customer Info
+  customerName: { type: String, required: true },
+  email: { type: String },
+  phone: { type: String },
+  address: { type: String },
+  state: { type: String },
+
+  // Items Array
+  items: [
+    {
+      itemName: { type: String, required: true },
+      qty: { type: Number, required: true, min: 0 },
+      unit: { type: String },
+      price: { type: Number, required: true, min: 0 },
+      discount: { type: Number, default: 0, min: 0, max: 100 },
+      tax: { type: Number, default: 0, min: 0 },
+      subtotal: { type: Number, required: true, min: 0 },
+    },
+  ],
+
+  // Total & Custom Fields
+  totalAmount: { type: Number, required: true, min: 0 },
+  customFields: { type: Object, default: {} },
+
+  // Date
+  date: { type: Date, default: Date.now },
 });
 
-// Pre-save hook to auto-increment quotationId
-quotationSchema.pre('save', async function (next) {
+// ✅ Auto-increment quotationId before save
+quotationSchema.pre("save", async function (next) {
   try {
     if (this.quotationId == null) {
       const counter = await Counter.findOneAndUpdate(
-        { id: 'quotationId' },
+        { id: "quotationId" },
         { $inc: { seq: 1 } },
         { new: true, upsert: true }
       );
@@ -32,14 +50,14 @@ quotationSchema.pre('save', async function (next) {
   }
 });
 
-// Virtual: formatted quotation number, e.g. Q-00001
-quotationSchema.virtual('quotationNumber').get(function() {
+// ✅ Virtual: formatted quotation number, e.g. Q-00001
+quotationSchema.virtual("quotationNumber").get(function () {
   if (this.quotationId == null) return null;
-  return `Q-${String(this.quotationId).padStart(5, '0')}`;
+  return `Q-${String(this.quotationId).padStart(5, "0")}`;
 });
 
-// Ensure virtuals are included when converting to JSON / Object
-quotationSchema.set('toJSON', { virtuals: true });
-quotationSchema.set('toObject', { virtuals: true });
+// ✅ Include virtuals when converting to JSON
+quotationSchema.set("toJSON", { virtuals: true });
+quotationSchema.set("toObject", { virtuals: true });
 
-export default mongoose.model('Quotation', quotationSchema);
+export default mongoose.model("Quotation", quotationSchema);

@@ -1,6 +1,6 @@
-// HomePage.jsx
-import React, { useState, useEffect } from "react";
-import "./Components/css/main.css";
+import React, { useState, useEffect, useContext } from "react";
+// import "./Components/css/main.css";
+import "./Components/css/Home.css";
 import Lead from "./Components/Leads/AddLead";
 import Quotation from "./Components/Quotation/AddQuotation";
 import AddCustomerForm from "./Components/Customer/AddCustomer";
@@ -13,7 +13,8 @@ import ViewFollowUps from "./Components/FollowUps/ViewFollowUp";
 import Todo from "./Components/TODO/AddTodo";
 import ViewTodo from "./Components/TODO/ViewTodo";
 import FollowUpPage from "./Components/FollowUps/AddFollowUp";
-import SettingsPage from "./Components/Settings/SettingsPage"; // ✅ Correct import
+import Settings from "./Components/Settings/Settings";
+import { useSettings } from "./context/SettingsContext";
 
 import {
   BarChart,
@@ -30,7 +31,8 @@ import {
 } from "recharts";
 
 const HomePage = ({ setCurrentPage, loggedInUser }) => {
-  const [darkMode, setDarkMode] = useState(false);
+  const { moduleSettings: settings } = useSettings();
+
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [currentTime, setCurrentTime] = useState(new Date());
   const [customerCount, setCustomerCount] = useState(0);
@@ -41,7 +43,8 @@ const HomePage = ({ setCurrentPage, loggedInUser }) => {
   const [expandedModule, setExpandedModule] = useState(null);
   const [activeSub, setActiveSub] = useState(null);
 
-  const modules = ["Lead", "Quotation", "Order", "Customer", "Follow-Up", "ToDo"];
+  // Include Settings in the sidebar
+  const modules = ["Lead", "Quotation", "Order", "Customer", "Follow-Up", "ToDo", "Settings"];
 
   const defaultBase = process.env.NODE_ENV === "development" ? "http://localhost:5000" : "";
   const baseUrl = process.env.REACT_APP_API_URL || defaultBase;
@@ -51,7 +54,7 @@ const HomePage = ({ setCurrentPage, loggedInUser }) => {
     return () => clearInterval(timer);
   }, []);
 
-  // 📊 Fetch data for dashboard
+  // Fetch counts for Dashboard
   const fetchCustomerCount = async () => {
     try {
       const res = await fetch(`${baseUrl.replace(/\/$/, "")}/api/customers`);
@@ -98,7 +101,7 @@ const HomePage = ({ setCurrentPage, loggedInUser }) => {
     }
   }, [activeModule]);
 
-  // 🧭 Sidebar navigation logic
+  // Sidebar navigation logic
   const toggleModule = (mod) => {
     setExpandedModule(expandedModule === mod ? null : mod);
   };
@@ -108,16 +111,10 @@ const HomePage = ({ setCurrentPage, loggedInUser }) => {
     setActiveSub(sub);
   };
 
-  const handleLogout = () => {
+ const handleLogout = () => {
     if (window.confirm("Are you sure you want to log out?")) {
       setCurrentPage("login");
     }
-  };
-
-  const handleSettings = () => {
-    setActiveModule("Settings");
-    setActiveSub(null);
-    setExpandedModule(null);
   };
 
   const chartData = [
@@ -142,7 +139,7 @@ const HomePage = ({ setCurrentPage, loggedInUser }) => {
     return <span>{icons[item] || "🔹"}</span>;
   };
 
-  // 💡 Render main content area based on active module
+  // Render main content area
   const renderContent = () => {
     if (activeModule === "Dashboard") {
       return (
@@ -151,7 +148,6 @@ const HomePage = ({ setCurrentPage, loggedInUser }) => {
             📊 Welcome to Lingouda's Dashboard! Overview of activities & sales operations.
           </p>
 
-          {/* Stats cards */}
           <div className="stats-grid">
             <div className="stat-card customers">
               <div className="stat-content">
@@ -263,16 +259,21 @@ const HomePage = ({ setCurrentPage, loggedInUser }) => {
         if (activeSub === "View") return <ViewTodo />;
         break;
       case "Settings":
-        return <SettingsPage />; // ✅ Render settings page here
+        return <Settings />;
       default:
         return <div>Welcome — choose a module from the left.</div>;
     }
   };
 
+  // 🌙 Apply theme from SettingsContext globally
+  useEffect(() => {
+    document.body.className = settings.theme === "dark" ? "dark" : "light";
+  }, [settings.theme]);
+
   return (
-    <div className={`container ${darkMode ? "dark" : "light"}`}>
+    <div className={`container ${settings.theme === "dark" ? "dark" : "light"}`}>
       {/* Top Bar */}
-      <div className={`top-bar ${darkMode ? "dark" : "light"}`}>
+      <div className={`top-bar ${settings.theme === "dark" ? "dark" : "light"}`}>
         <button className="sidebar-toggle" onClick={() => setSidebarOpen(!sidebarOpen)}>
           {sidebarOpen ? "⬅️" : "➡️"}
         </button>
@@ -283,9 +284,6 @@ const HomePage = ({ setCurrentPage, loggedInUser }) => {
         <span style={{ marginLeft: "auto", color: "white" }}>
           {currentTime.toLocaleTimeString()}
         </span>
-        <button className="dark-mode-button" onClick={() => setDarkMode(!darkMode)}>
-          {darkMode ? "🌞 Light Mode" : "🌙 Dark Mode"}
-        </button>
         <span className="notification-bell">🔔</span>
       </div>
 
@@ -313,59 +311,65 @@ const HomePage = ({ setCurrentPage, loggedInUser }) => {
             {/* Main Modules */}
             {modules.map((mod) => (
               <li key={mod} className="module-group">
-                <div
-                  className={`sidebar-list-item module-item ${
-                    activeModule === mod && !activeSub ? "active" : ""
-                  }`}
-                  onClick={() => toggleModule(mod)}
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                  }}
-                >
-                  <div style={{ display: "flex", alignItems: "center" }}>
+                {mod === "Settings" ? (
+                  <div
+                    className={`sidebar-list-item ${
+                      activeModule === "Settings" ? "active" : ""
+                    }`}
+                    onClick={() => setActiveModule("Settings")}
+                  >
                     {getIcon(mod)}
-                    {sidebarOpen && <span style={{ marginLeft: "10px" }}>{mod}</span>}
+                    {sidebarOpen && <span style={{ marginLeft: 10 }}>{mod}</span>}
                   </div>
-                  {sidebarOpen && (
-                    <span style={{ marginRight: 8 }}>
-                      {expandedModule === mod ? "▾" : "▸"}
-                    </span>
-                  )}
-                </div>
+                ) : (
+                  <>
+                    <div
+                      className={`sidebar-list-item module-item ${
+                        activeModule === mod && !activeSub ? "active" : ""
+                      }`}
+                      onClick={() => toggleModule(mod)}
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "space-between",
+                      }}
+                    >
+                      <div style={{ display: "flex", alignItems: "center" }}>
+                        {getIcon(mod)}
+                        {sidebarOpen && <span style={{ marginLeft: 10 }}>{mod}</span>}
+                      </div>
+                      {sidebarOpen && (
+                        <span style={{ marginRight: 8 }}>
+                          {expandedModule === mod ? "▾" : "▸"}
+                        </span>
+                      )}
+                    </div>
 
-                {expandedModule === mod && (
-                  <ul className="submenu">
-                    <li
-                      className={`sidebar-subitem ${
-                        activeModule === mod && activeSub === "Add" ? "active" : ""
-                      }`}
-                      onClick={() => handleSelectSub(mod, "Add")}
-                    >
-                      ➕ {sidebarOpen && <span style={{ marginLeft: 8 }}>Add {mod}</span>}
-                    </li>
-                    <li
-                      className={`sidebar-subitem ${
-                        activeModule === mod && activeSub === "View" ? "active" : ""
-                      }`}
-                      onClick={() => handleSelectSub(mod, "View")}
-                    >
-                      🔎 {sidebarOpen && <span style={{ marginLeft: 8 }}>View {mod}s</span>}
-                    </li>
-                  </ul>
+                    {expandedModule === mod && (
+                      <ul className="submenu">
+                        <li
+                          className={`sidebar-subitem ${
+                            activeModule === mod && activeSub === "Add" ? "active" : ""
+                          }`}
+                          onClick={() => handleSelectSub(mod, "Add")}
+                        >
+                          ➕ {sidebarOpen && <span style={{ marginLeft: 8 }}>Add {mod}</span>}
+                        </li>
+                        <li
+                          className={`sidebar-subitem ${
+                            activeModule === mod && activeSub === "View" ? "active" : ""
+                          }`}
+                          onClick={() => handleSelectSub(mod, "View")}
+                        >
+                          🔎{" "}
+                          {sidebarOpen && <span style={{ marginLeft: 8 }}>View {mod}s</span>}
+                        </li>
+                      </ul>
+                    )}
+                  </>
                 )}
               </li>
             ))}
-
-            {/* ✅ Settings Option */}
-            <li
-              className={`sidebar-list-item ${activeModule === "Settings" ? "active" : ""}`}
-              onClick={handleSettings}
-            >
-              {getIcon("Settings")}
-              {sidebarOpen && <span style={{ marginLeft: "10px" }}>Settings</span>}
-            </li>
 
             {/* Logout */}
             <li className="sidebar-list-item" onClick={handleLogout}>

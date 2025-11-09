@@ -10,11 +10,16 @@ const LoginPage = ({ goToRegister, goToHome }) => {
     e.preventDefault();
     try {
       const base = process.env.REACT_APP_API_URL || "http://localhost:5000";
-      const response = await axios.post(`${base.replace(/\/$/, "")}/api/login`, {
+      const res = await axios.post(`${base.replace(/\/$/, "")}/api/login`, {
         username,
         password,
       });
-      alert(response.data.message);
+
+      // Save token locally
+      localStorage.setItem("token", res.data.token);
+      localStorage.setItem("user", JSON.stringify(res.data.user));
+
+      alert("✅ Login successful!");
       goToHome();
     } catch (error) {
       alert(error.response?.data?.message || "Login failed");
