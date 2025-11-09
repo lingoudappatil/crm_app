@@ -273,62 +273,72 @@ const ViewQuotations = ({ onRefreshParent }) => {
 
       {/* Table */}
       <div style={{ overflowX: "auto" }}>
-        <table className="data-table">
-          <thead>
-            <tr>
-              <th>#</th>
-              <th>Quote No.</th>
-              <th>Customer</th>
-              <th>Amount</th>
-              <th>Status</th>
-              <th>Date</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {loading ? (
-              <tr><td colSpan="7" style={{ textAlign: "center" }}>Loading...</td></tr>
-            ) : pageData.length === 0 ? (
-              <tr><td colSpan="7" style={{ textAlign: "center" }}>No quotations found.</td></tr>
-            ) : (
-              pageData.map((q, i) => (
-                <tr key={q._id || i}>
-                  <td>{(page - 1) * perPage + i + 1}</td>
-                  <td>{q.quoteNumber || q.ref || q._id}</td>
-                  <td>{q.customerName || "-"}</td>
-                  <td>{q.totalAmount || q.amount || "-"}</td>
-                  <td>{q.status || "-"}</td>
-                  <td>{q.createdAt ? new Date(q.createdAt).toLocaleString() : "-"}</td>
-                  <td style={{ position: "relative" }}>
-                    <button
-                      onClick={() => setOpenActionId(openActionId === q._id ? null : q._id)}
-                      style={{
-                        background: "#007bff",
-                        color: "white",
-                        border: "none",
-                        borderRadius: "5px",
-                        padding: "5px 10px",
-                        cursor: "pointer",
-                      }}
-                    >
-                      Actions ⬇️
-                    </button>
+  <table className="data-table">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Quotation No.</th>
+        <th>Customer Name</th>
+        <th>Total Amount (₹)</th>
+        <th>Status</th>
+        <th>Date</th>
 
-                    {openActionId === q._id && (
-                      <div className="dropdown-menu">
-                        <button onClick={() => handleView(q)} style={menuBtnStyle}>👁 View</button>
-                        <button onClick={() => handleEdit(q)} style={menuBtnStyle}>✏️ Edit</button>
-                        <button onClick={() => handleExportPDF(q)} style={menuBtnStyle}>📄 Export PDF</button>
-                      </div>
-                    )}
-                  </td>
-                </tr>
-              ))
-            )}
-          </tbody>
+        {/* ✅ Dynamically render custom field headers */}
+        {quotes.length > 0 && quotes[0].customFields &&
+          Object.keys(quotes[0].customFields).map((fieldKey) => (
+            <th key={fieldKey}>{fieldKey}</th>
+          ))
+        }
 
-        </table>
-      </div>
+        <th>Actions</th>
+      </tr>
+    </thead>
+
+    <tbody>
+  {loading ? (
+    <tr><td colSpan="7" style={{ textAlign: "center" }}>Loading...</td></tr>
+  ) : pageData.length === 0 ? (
+    <tr><td colSpan="7" style={{ textAlign: "center" }}>No quotations found.</td></tr>
+  ) : (
+    pageData.map((q, i) => (
+      <tr key={q._id || i}>
+        <td>{(page - 1) * perPage + i + 1}</td>
+        <td>{q.quoteNumber || q.ref || q._id}</td>
+        <td>{q.customerName || "-"}</td>
+        <td>{q.totalAmount || q.amount || "-"}</td>
+        <td>{q.status || "-"}</td>
+        <td>{q.createdAt ? new Date(q.createdAt).toLocaleString() : "-"}</td>
+        <td style={{ position: "relative" }}>
+          <button
+            onClick={() => setOpenActionId(openActionId === q._id ? null : q._id)}
+            style={{
+              background: "#007bff",
+              color: "white",
+              border: "none",
+              borderRadius: "5px",
+              padding: "5px 10px",
+              cursor: "pointer",
+            }}
+          >
+            Actions ⬇️
+          </button>
+
+          {openActionId === q._id && (
+            <div className="dropdown-menu">
+              <button onClick={() => handleView(q)} style={menuBtnStyle}>👁 View</button>
+              <button onClick={() => handleEdit(q)} style={menuBtnStyle}>✏️ Edit</button>
+              <button onClick={() => handleExportPDF(q)} style={menuBtnStyle}>📄 Export PDF</button>
+            </div>
+          )}
+        </td>
+      </tr>
+    ))
+  )}
+</tbody>
+
+  </table>
+</div>
+
 
       {/* Pagination */}
       <div className="pagination" style={{ marginTop: "15px", textAlign: "center" }}>
