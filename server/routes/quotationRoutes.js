@@ -20,6 +20,8 @@ router.post("/", async (req, res) => {
       customFields,
     } = req.body;
 
+    console.log("📦 Incoming quotation:", req.body);
+
     // Validate required fields
     if (!customerName?.trim()) {
       return res.status(400).json({ error: "Customer name is required" });
@@ -30,21 +32,21 @@ router.post("/", async (req, res) => {
     }
 
     // Validate items
-    const validItems = items.every(item => 
-      item.itemName?.trim() && 
-      typeof item.qty === 'number' && item.qty > 0 &&
-      typeof item.price === 'number' && item.price >= 0
+    const validItems = items.every(item =>
+      item.itemName?.trim() &&
+      typeof item.qty === "number" && item.qty > 0 &&
+      typeof item.price === "number" && item.price >= 0
     );
 
     if (!validItems) {
-      return res.status(400).json({ 
-        error: "Each item must have a name, quantity greater than 0, and valid price" 
+      return res.status(400).json({
+        error: "Each item must have a valid name, quantity > 0, and price",
       });
     }
 
-    // Convert totalAmount to number if it's a string
-    const parsedTotalAmount = typeof totalAmount === 'string' 
-      ? parseFloat(totalAmount) 
+    // Convert totalAmount
+    const parsedTotalAmount = typeof totalAmount === "string"
+      ? parseFloat(totalAmount)
       : totalAmount;
 
     if (isNaN(parsedTotalAmount) || parsedTotalAmount < 0) {
@@ -61,43 +63,25 @@ router.post("/", async (req, res) => {
       items: items.map(item => ({
         ...item,
         itemName: item.itemName.trim(),
-        qty: parseFloat(item.qty),
-        price: parseFloat(item.price),
-        discount: parseFloat(item.discount || 0),
-        tax: parseFloat(item.tax || 0),
-        subtotal: parseFloat(item.subtotal || 0)
+        qty: Number(item.qty),
+        price: Number(item.price),
+        discount: Number(item.discount || 0),
+        tax: Number(item.tax || 0),
+        subtotal: Number(item.subtotal || 0),
       })),
-      totalAmount: parsedTotalAmount,
-      customFields
+      totalAmount: Number(parsedTotalAmount),
+      customFields: customFields || {},
     });
 
-    // Attempt to save
     await newQuotation.save();
-
-    // Return success response
-    res.status(201).json({ 
-      message: "Quotation added successfully!", 
-      quotation: newQuotation 
+    res.status(201).json({
+      message: "Quotation added successfully!",
+      quotation: newQuotation,
     });
 
   } catch (error) {
-    // Log detailed error for debugging
-    console.error("❌ Error saving quotation:", {
-      error: error.message,
-      stack: error.stack,
-      body: req.body
-    });
-
-    // Send appropriate error message
-    if (error.name === 'ValidationError') {
-      return res.status(400).json({ 
-        error: "Validation error: " + Object.values(error.errors).map(e => e.message).join(', ')
-      });
-    }
-
-    res.status(500).json({ 
-      error: "Failed to add quotation: " + error.message
-    });
+    console.error("❌ Error saving quotation:", error);
+    res.status(500).json({ error: "Failed to add quotation: " + error.message });
   }
 });
 
@@ -109,7 +93,6 @@ router.get("/", async (req, res) => {
     const quotations = await Quotation.find().sort({ createdAt: -1 });
     res.json(quotations);
   } catch (error) {
-    console.error("❌ Error fetching quotations:", error);
     res.status(500).json({ error: error.message });
   }
 });
@@ -120,8 +103,7 @@ router.get("/", async (req, res) => {
 router.get("/:id/export", async (req, res) => {
   try {
     const quotation = await Quotation.findById(req.params.id);
-    if (!quotation)
-      return res.status(404).json({ error: "Quotation not found" });
+    if (!quotation) return res.status(404).json({ error: "Quotation not found" });
 
     const doc = new PDFDocument();
     res.setHeader("Content-Type", "application/pdf");

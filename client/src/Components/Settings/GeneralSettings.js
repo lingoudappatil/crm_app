@@ -1,13 +1,15 @@
 import React, { useState } from "react";
+import { toast, ToastContainer } from "react-toastify";
 import "./settings.css";
 
-const GeneralSettings = () => {
+const GeneralSettings = ({ setActiveTab }) => {
   const [theme, setTheme] = useState("light");
   const [language, setLanguage] = useState("English");
   const [notifications, setNotifications] = useState(true);
 
   return (
     <div className="settings-container">
+      <ToastContainer />
       <div className="settings-card">
         <h2>⚙️ General Settings</h2>
 
@@ -47,8 +49,14 @@ const GeneralSettings = () => {
 
         <button className="btn-primary mt-3">💾 Save Settings</button>
       </div>
+      <div className="text-center mt-10">
+        <button className="btn-secondary" onClick={() => setActiveTab && setActiveTab(null)}>
+          ← Back to Dashboard
+        </button>
+      </div>
     </div>
   );
 };
+
 
 export default GeneralSettings;

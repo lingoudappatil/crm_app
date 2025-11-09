@@ -1,4 +1,3 @@
-// server/models/Quotation.js
 import mongoose from "mongoose";
 import Counter from "./Counter.js";
 
@@ -32,9 +31,9 @@ const quotationSchema = new mongoose.Schema({
 
   // Date
   date: { type: Date, default: Date.now },
-});
+}, { timestamps: true }); // ✅ adds createdAt, updatedAt
 
-// ✅ Auto-increment quotationId before save
+// Auto-increment quotationId before save
 quotationSchema.pre("save", async function (next) {
   try {
     if (this.quotationId == null) {
@@ -51,13 +50,13 @@ quotationSchema.pre("save", async function (next) {
   }
 });
 
-// ✅ Virtual: formatted quotation number, e.g. Q-00001
+// Virtual: formatted quotation number
 quotationSchema.virtual("quotationNumber").get(function () {
   if (this.quotationId == null) return null;
   return `Q-${String(this.quotationId).padStart(5, "0")}`;
 });
 
-// ✅ Include virtuals when converting to JSON
+// Include virtuals when converting to JSON
 quotationSchema.set("toJSON", { virtuals: true });
 quotationSchema.set("toObject", { virtuals: true });
 

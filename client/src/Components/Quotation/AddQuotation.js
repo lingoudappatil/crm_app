@@ -94,13 +94,15 @@ const AddQuotation = () => {
         const subtotal = afterDiscount + taxAmount;
 
         return {
-          itemName: item.itemName?.trim(),
-          qty,
-          unit: item.unit?.trim(),
-          price,
-          discount,
-          tax,
-          subtotal: Number(subtotal.toFixed(2))
+    itemName: item.itemName?.trim(),
+qty,
+ price,
+ qty: Number(qty),
+ price: Number(price),
+    unit: item.unit?.trim(),
+    discount,
+    tax,
+    subtotal: Number(subtotal.toFixed(2)),
         };
       });
 
@@ -111,7 +113,7 @@ const AddQuotation = () => {
         address: formData.address?.trim(),
         state: formData.state?.trim(),
         items: cleanItems,
-        totalAmount: parseFloat(totalAmount).toFixed(2),
+        totalAmount: Number(totalAmount),  // ensure numeric
         customFields: customFieldValues,
         date: new Date().toISOString() // Add creation date
       };
@@ -203,7 +205,7 @@ const AddQuotation = () => {
   return (
     <div className="add-form p-6">
       <form onSubmit={handleSubmit} className="max-w-6xl mx-auto">
-        <h2 className="text-2xl font-bold mb-6 text-center text-gray-800">🧾 Add Quotation</h2>
+        <h2 className="text-2xl font-bold mb-6 text-center text-gray-800">🧾 Add Quotations</h2>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* ================= Customer Info ================= */}
@@ -211,7 +213,6 @@ const AddQuotation = () => {
             <h3 className="text-lg font-semibold mb-4 text-blue-800 border-b pb-2">
               👤 Customer Information
             </h3>
-
             <div className="space-y-4">
               <div className="form-group">
                 <label>Customer Name</label>
@@ -266,7 +267,6 @@ const AddQuotation = () => {
               </div>
             </div>
           </div>
-
           {/* ================= Custom Fields ================= */}
           <div className="bg-white rounded-lg shadow-md p-6">
             <h3 className="text-lg font-semibold mb-4 text-green-800 border-b pb-2">

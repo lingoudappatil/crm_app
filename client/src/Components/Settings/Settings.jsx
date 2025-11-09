@@ -19,6 +19,7 @@ const Settings = () => {
       autoSave: true,
       customFields: {
         Lead: [],
+        Quotation: [],
         Customer: [],
         Order: []
       }
@@ -52,7 +53,7 @@ const Settings = () => {
     if (!settings.customFields) {
       setSettings({
         ...settings,
-        customFields: { Lead: [], Customer: [], Order: [] }
+        customFields: { Lead: [],Quotation: [], Customer: [], Order: [] }
       });
     }
   }, [settings]);
@@ -182,7 +183,7 @@ const Settings = () => {
       <div className="settings-content">
         {/* Sidebar */}
         <div className="settings-sidebar">
-          {["Lead", "Customer", "Order"].map((form) => (
+          {["Lead", "Quotation","Customer", "Order"].map((form) => (
             <button
               key={form}
               className={`form-type-button ${
