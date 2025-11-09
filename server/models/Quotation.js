@@ -1,3 +1,4 @@
+// server/models/Quotation.js
 import mongoose from "mongoose";
 import Counter from "./Counter.js";
 

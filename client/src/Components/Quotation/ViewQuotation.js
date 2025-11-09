@@ -13,7 +13,7 @@ const ViewQuotations = ({ onRefreshParent }) => {
   const [viewModalOpen, setViewModalOpen] = useState(false);
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [selectedQuote, setSelectedQuote] = useState(null);
-  const perPage = 8;
+  const perPage = 10;
 
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
@@ -101,11 +101,11 @@ const ViewQuotations = ({ onRefreshParent }) => {
       const base = process.env.REACT_APP_API_URL || "http://localhost:5000";
       const response = await fetch(`${base.replace(/\/$/, "")}/api/quotations/${selectedQuote._id}`, {
         method: "PUT",
-        headers: { 
+        headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          name: selectedQuote.name,
+          name: selectedQuote.customerName,
           email: selectedQuote.email,
           phone: selectedQuote.phone,
           item: selectedQuote.item,
@@ -135,7 +135,7 @@ const ViewQuotations = ({ onRefreshParent }) => {
     try {
       const base = process.env.REACT_APP_API_URL || "http://localhost:5000";
       const res = await fetch(`${base.replace(/\/$/, "")}/api/quotations/${quote._id}/export`);
-      
+
       if (!res.ok) {
         const errorData = await res.json();
         throw new Error(errorData.error || "PDF export failed");
@@ -146,15 +146,15 @@ const ViewQuotations = ({ onRefreshParent }) => {
       const a = document.createElement("a");
       a.href = url;
       a.download = `quotation-${quote.quotationNumber || quote._id}.pdf`;
-      
+
       // Append to body, click, and remove
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
-      
+
       // Cleanup
       window.URL.revokeObjectURL(url);
-      
+
       alert("✅ PDF exported successfully!");
     } catch (err) {
       console.error("Error exporting PDF:", err);
@@ -169,7 +169,7 @@ const ViewQuotations = ({ onRefreshParent }) => {
         <div className="modal-content">
           <h2>Quotation Details</h2>
           <p><b>Quote No:</b> {selectedQuote.quoteNumber || selectedQuote._id}</p>
-          <p><b>Customer:</b> {selectedQuote.name || selectedQuote.customerName}</p>
+          <p><b>Customer:</b> {selectedQuote.customerName || selectedQuote.customerName}</p>
           <p><b>Email:</b> {selectedQuote.email}</p>
           <p><b>Phone:</b> {selectedQuote.phone}</p>
           <p><b>Item:</b> {selectedQuote.item}</p>
@@ -295,7 +295,7 @@ const ViewQuotations = ({ onRefreshParent }) => {
                 <tr key={q._id || i}>
                   <td>{(page - 1) * perPage + i + 1}</td>
                   <td>{q.quoteNumber || q.ref || q._id}</td>
-                  <td>{q.customerName || q.customer || "-"}</td>
+                  <td>{q.customerName || "-"}</td>
                   <td>{q.totalAmount || q.amount || "-"}</td>
                   <td>{q.status || "-"}</td>
                   <td>{q.createdAt ? new Date(q.createdAt).toLocaleString() : "-"}</td>
@@ -326,6 +326,7 @@ const ViewQuotations = ({ onRefreshParent }) => {
               ))
             )}
           </tbody>
+
         </table>
       </div>
 
