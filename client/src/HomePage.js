@@ -111,7 +111,7 @@ const HomePage = ({ setCurrentPage, loggedInUser }) => {
     setActiveSub(sub);
   };
 
- const handleLogout = () => {
+  const handleLogout = () => {
     if (window.confirm("Are you sure you want to log out?")) {
       setCurrentPage("login");
     }
@@ -181,6 +181,8 @@ const HomePage = ({ setCurrentPage, loggedInUser }) => {
               <div className="stat-icon">📦</div>
             </div>
           </div>
+
+
 
           {/* Charts */}
           <div className="charts-container">
@@ -295,9 +297,8 @@ const HomePage = ({ setCurrentPage, loggedInUser }) => {
           <ul className="sidebar-list">
             {/* Dashboard */}
             <li
-              className={`sidebar-list-item ${
-                activeModule === "Dashboard" ? "active" : ""
-              }`}
+              className={`sidebar-list-item ${activeModule === "Dashboard" ? "active" : ""
+                }`}
               onClick={() => {
                 setActiveModule("Dashboard");
                 setActiveSub(null);
@@ -313,9 +314,8 @@ const HomePage = ({ setCurrentPage, loggedInUser }) => {
               <li key={mod} className="module-group">
                 {mod === "Settings" ? (
                   <div
-                    className={`sidebar-list-item ${
-                      activeModule === "Settings" ? "active" : ""
-                    }`}
+                    className={`sidebar-list-item ${activeModule === "Settings" ? "active" : ""
+                      }`}
                     onClick={() => setActiveModule("Settings")}
                   >
                     {getIcon(mod)}
@@ -324,9 +324,8 @@ const HomePage = ({ setCurrentPage, loggedInUser }) => {
                 ) : (
                   <>
                     <div
-                      className={`sidebar-list-item module-item ${
-                        activeModule === mod && !activeSub ? "active" : ""
-                      }`}
+                      className={`sidebar-list-item module-item ${activeModule === mod && !activeSub ? "active" : ""
+                        }`}
                       onClick={() => toggleModule(mod)}
                       style={{
                         display: "flex",
@@ -348,17 +347,15 @@ const HomePage = ({ setCurrentPage, loggedInUser }) => {
                     {expandedModule === mod && (
                       <ul className="submenu">
                         <li
-                          className={`sidebar-subitem ${
-                            activeModule === mod && activeSub === "Add" ? "active" : ""
-                          }`}
+                          className={`sidebar-subitem ${activeModule === mod && activeSub === "Add" ? "active" : ""
+                            }`}
                           onClick={() => handleSelectSub(mod, "Add")}
                         >
                           ➕ {sidebarOpen && <span style={{ marginLeft: 8 }}>Add {mod}</span>}
                         </li>
                         <li
-                          className={`sidebar-subitem ${
-                            activeModule === mod && activeSub === "View" ? "active" : ""
-                          }`}
+                          className={`sidebar-subitem ${activeModule === mod && activeSub === "View" ? "active" : ""
+                            }`}
                           onClick={() => handleSelectSub(mod, "View")}
                         >
                           🔎{" "}
