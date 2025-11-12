@@ -1,6 +1,7 @@
 // client/src/Components/Quotation/ViewQuotation.js
 import React, { useEffect, useState } from "react";
 import DateFilter from "./datefilter";
+import filter from "./filter";
 import "./quotation.css";
 
 const ViewQuotations = ({ onRefreshParent }) => {
@@ -267,6 +268,9 @@ const ViewQuotations = ({ onRefreshParent }) => {
             }}
           >
             🔄 Refresh
+          </button>
+            <button onclick = "filter">
+            🔄 Filter
           </button>
         </div>
       </div>
