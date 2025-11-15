@@ -5,6 +5,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 import path from "path";
 import { fileURLToPath } from "url";
+import fs from "fs";
 
 // Models
 import User from "./models/User.js";
@@ -37,37 +38,33 @@ app.post("/api/login", async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    // Validation
     if (!email || !password) {
       return res.status(400).json({ error: "Email and password required" });
     }
 
-    console.log("🔍 Login attempt for:", email);
+    console.log("🔍 Login attempt:", email);
 
-    // Find user
     const user = await User.findOne({ email });
-    
     if (!user) {
       console.log("❌ User not found:", email);
       return res.status(401).json({ error: "User not found" });
     }
 
-    // Simple password check (use bcrypt in production)
     if (user.password !== password) {
-      console.log("❌ Invalid password for:", email);
+      console.log("❌ Invalid password:", email);
       return res.status(401).json({ error: "Invalid password" });
     }
 
-    console.log("✅ Login successful for:", email);
+    console.log("✅ Login successful:", email);
 
-    res.json({ 
+    res.json({
       message: "Login successful",
-      user: { 
-        id: user._id, 
-        email: user.email, 
+      user: {
+        id: user._id,
+        email: user.email,
         name: user.name,
-        role: user.role || "user"
-      } 
+        role: user.role || "user",
+      },
     });
   } catch (error) {
     console.error("❌ Login error:", error);
@@ -75,27 +72,32 @@ app.post("/api/login", async (req, res) => {
   }
 });
 
+// =================== REGISTER ===================
 app.post("/api/register", async (req, res) => {
   try {
     const { email, password, name } = req.body;
 
     if (!email || !password || !name) {
-      return res.status(400).json({ error: "Name, email, and password required" });
+      return res
+        .status(400)
+        .json({ error: "Name, email, and password required" });
     }
 
-    // Check if user exists
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       return res.status(400).json({ error: "User already exists" });
     }
 
-    // Create new user
     const newUser = new User({ email, password, name });
     await newUser.save();
 
-    res.status(201).json({ 
+    res.status(201).json({
       message: "Registration successful",
-      user: { id: newUser._id, email: newUser.email, name: newUser.name }
+      user: {
+        id: newUser._id,
+        email: newUser.email,
+        name: newUser.name,
+      },
     });
   } catch (error) {
     console.error("❌ Registration error:", error);
@@ -107,12 +109,14 @@ app.post("/api/register", async (req, res) => {
 app.use("/api/followups", followUpRoutes);
 app.use("/api/quotations", quotationRoutes);
 
-// ✅ Customers
+// Customers CRUD
 app.post("/api/customers", async (req, res) => {
   try {
     const newCustomer = new Customer(req.body);
     await newCustomer.save();
-    res.status(201).json({ message: "Customer added successfully!", customer: newCustomer });
+    res
+      .status(201)
+      .json({ message: "Customer added successfully!", customer: newCustomer });
   } catch (error) {
     console.error("Error saving customer:", error);
     res.status(500).json({ error: "Failed to add customer" });
@@ -133,9 +137,19 @@ app.get("/api/customers", async (req, res) => {
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-app.use(express.static(path.join(__dirname, "./client/build")));
+// 👉 FIXED PATH (client folder is OUTSIDE /server folder)
+const clientBuildPath = path.join(__dirname, "../client/build");
+
+console.log("📁 Looking for React build at:", clientBuildPath);
+console.log(
+  "📁 index.html exists?",
+  fs.existsSync(path.join(clientBuildPath, "index.html"))
+);
+
+app.use(express.static(clientBuildPath));
+
 app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "./client/build/index.html"));
+  res.sendFile(path.join(clientBuildPath, "index.html"));
 });
 
 // =================== ERROR HANDLING ===================
@@ -144,6 +158,6 @@ app.use((err, req, res, next) => {
   res.status(500).json({ error: "Internal Server Error" });
 });
 
-// ✅ Start Server
+// =================== START SERVER ===================
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
